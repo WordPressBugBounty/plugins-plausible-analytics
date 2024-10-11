@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Plausible Analytics Team <hello@plausible.io>\n"
-"POT-Creation-Date: 2024-08-23 19:47+0000\n"
+"POT-Creation-Date: 2024-10-11 09:10+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/plausible/wordpress/issues/new\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -16,15 +16,15 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/Actions.php:135
+#: src/Actions.php:140
 msgid "View Analytics"
 msgstr ""
 
-#: src/Actions.php:147
+#: src/Actions.php:152
 msgid "View Page Analytics"
 msgstr ""
 
-#: src/Actions.php:161, src/Admin/Filters.php:63, src/Admin/Settings/API.php:449
+#: src/Actions.php:166, src/Admin/Filters.php:63, src/Admin/Settings/API.php:449
 msgid "Settings"
 msgstr ""
 
@@ -80,7 +80,7 @@ msgstr ""
 msgid "Something went wrong while enabling Pageview Properties: %s"
 msgstr ""
 
-#: src/ClientFactory.php:49
+#: src/ClientFactory.php:57
 msgid "cURL is not enabled on this server, which means API provisioning will not work. Please contact your hosting provider to enable the cURL module or <code>allow_url_fopen</code>."
 msgstr ""
 
