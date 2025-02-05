@@ -166,18 +166,18 @@ class WooCommerce {
 		}
 		?>
 		<script>
-			let addToCartForm = document.querySelector('form.cart');
-			let quantity = document.querySelector('input[name="quantity"]');
+			let plausibleAddToCartForm = document.querySelector('form.cart');
+			let plausibleQuantity = document.querySelector('input[name="quantity"]');
 
-			addToCartForm.classList.add('plausible-event-name=<?php echo str_replace( ' ', '+', $this->event_goals[ 'add-to-cart' ] ); ?>');
-			addToCartForm.classList.add('plausible-event-quantity=' + quantity.value);
-			addToCartForm.classList.add('plausible-event-product_id=<?php echo $product->get_id(); ?>');
-			addToCartForm.classList.add('plausible-event-product_name=<?php echo str_replace( ' ', '+', $product->get_name( null ) ); ?>');
-			addToCartForm.classList.add('plausible-event-price=<?php echo $product->get_price( null ); ?>');
+			plausibleAddToCartForm.classList.add('plausible-event-name=<?php echo str_replace( ' ', '+', $this->event_goals[ 'add-to-cart' ] ); ?>');
+			plausibleAddToCartForm.classList.add('plausible-event-quantity=' + plausibleQuantity.value);
+			plausibleAddToCartForm.classList.add('plausible-event-product_id=<?php echo $product->get_id(); ?>');
+			plausibleAddToCartForm.classList.add('plausible-event-product_name=<?php echo str_replace( ' ', '+', $product->get_name( null ) ); ?>');
+			plausibleAddToCartForm.classList.add('plausible-event-price=<?php echo $product->get_price( null ); ?>');
 
-			quantity.addEventListener('change', function (e) {
+			plausibleQuantity.addEventListener('change', function (e) {
 				let target = e.target;
-				addToCartForm.className = addToCartForm.className.replace(/(plausible-event-quantity=).+?/, "\$1" + target.value);
+				plausibleAddToCartForm.className = plausibleAddToCartForm.className.replace(/(plausible-event-quantity=).+?/, "\$1" + target.value);
 			});
 		</script>
 		<?php

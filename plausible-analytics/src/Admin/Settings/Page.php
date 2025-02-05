@@ -2,7 +2,6 @@
 
 /**
  * Plausible Analytics | Settings API.
- *
  * @since      1.3.0
  * @package    WordPress
  * @subpackage Plausible Analytics
@@ -72,7 +71,6 @@ class Page extends API {
 
 	/**
 	 * Constructor.
-	 *
 	 * @since  1.3.0
 	 * @access public
 	 * @return void
@@ -120,7 +118,8 @@ class Page extends API {
 						],
 						[
 							'label'    => empty( $settings[ 'domain_name' ] ) || empty( $settings[ 'api_token' ] ) ?
-								esc_html__( 'Connect', 'plausible-analytics' ) : esc_html__( 'Connected', 'plausible-analytics' ),
+								esc_html__( 'Connect', 'plausible-analytics' ) :
+								esc_html__( 'Connected', 'plausible-analytics' ),
 							'slug'     => 'connect_plausible_analytics',
 							'type'     => 'button',
 							'disabled' => empty( $settings[ 'domain_name' ] ) ||
@@ -140,42 +139,42 @@ class Page extends API {
 						'plausible-analytics'
 					),
 					'fields' => [
-						'404'            => [
+						'404'              => [
 							'label' => esc_html__( '404 error pages', 'plausible-analytics' ),
 							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-track-404-error-pages',
 							'slug'  => 'enhanced_measurements',
 							'type'  => 'checkbox',
 							'value' => '404',
 						],
-						'outbound-links' => [
+						'outbound-links'   => [
 							'label' => esc_html__( 'Outbound links', 'plausible-analytics' ),
 							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-track-external-link-clicks',
 							'slug'  => 'enhanced_measurements',
 							'type'  => 'checkbox',
 							'value' => 'outbound-links',
 						],
-						'file-downloads' => [
+						'file-downloads'   => [
 							'label' => esc_html__( 'File downloads', 'plausible-analytics' ),
 							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-track-file-downloads',
 							'slug'  => 'enhanced_measurements',
 							'type'  => 'checkbox',
 							'value' => 'file-downloads',
 						],
-						'search'         => [
+						'search'           => [
 							'label' => esc_html__( 'Search queries', 'plausible-analytics' ),
 							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-enable-site-search-tracking',
 							'slug'  => 'enhanced_measurements',
 							'type'  => 'checkbox',
 							'value' => 'search',
 						],
-						'tagged-events'  => [
+						'tagged-events'    => [
 							'label' => esc_html__( 'Custom events', 'plausible-analytics' ),
 							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-setup-custom-events-to-track-goal-conversions',
 							'slug'  => 'enhanced_measurements',
 							'type'  => 'checkbox',
 							'value' => 'tagged-events',
 						],
-						'revenue'        => [
+						'revenue'          => [
 							'label'    => esc_html__( 'Ecommerce revenue', 'plausible-analytics' ),
 							'docs'     => 'https://plausible.io/wordpress-analytics-plugin#how-to-track-ecommerce-revenue',
 							'slug'     => 'enhanced_measurements',
@@ -183,21 +182,28 @@ class Page extends API {
 							'value'    => 'revenue',
 							'disabled' => ! empty( $settings[ 'self_hosted_domain' ] ),
 						],
-						'pageview-props' => [
+						'pageview-props'   => [
 							'label' => esc_html__( 'Authors and categories', 'plausible-analytics' ),
 							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-send-custom-properties',
 							'slug'  => 'enhanced_measurements',
 							'type'  => 'checkbox',
 							'value' => 'pageview-props',
 						],
-						'hash'           => [
+						'form-completions' => [
+							'label' => esc_html__( 'Form completions', 'plausible-analytics' ),
+							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-track-form-completions',
+							'slug'  => 'enhanced_measurements',
+							'type'  => 'checkbox',
+							'value' => 'form-completions',
+						],
+						'hash'             => [
 							'label' => esc_html__( 'Hash-based routing', 'plausible-analytics' ),
 							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-enable-hash-based-url-tracking',
 							'slug'  => 'enhanced_measurements',
 							'type'  => 'checkbox',
 							'value' => 'hash',
 						],
-						'compat'         => [
+						'compat'           => [
 							'label' => esc_html__( 'IE compatibility', 'plausible-analytics' ),
 							'docs'  => 'https://plausible.io/wordpress-analytics-plugin#how-to-track-visitors-who-use-internet-explorer',
 							'slug'  => 'enhanced_measurements',
@@ -221,7 +227,8 @@ class Page extends API {
 						get_site_url( null, rest_get_url_prefix() ),
 						empty(
 						Helpers::get_settings()[ 'proxy_enabled' ]
-						) ? 'a random directory/file for storing the JS file' : 'a JS file, called <code>' . str_replace(
+						) ? 'a random directory/file for storing the JS file' :
+							'a JS file, called <code>' . str_replace(
 								ABSPATH,
 								'',
 								Helpers::get_proxy_resource( 'cache_dir' ) . Helpers::get_proxy_resource(
@@ -256,7 +263,8 @@ class Page extends API {
 							'slug'     => 'enable_analytics_dashboard',
 							'type'     => 'checkbox',
 							'value'    => 'on',
-							'disabled' => empty( Helpers::get_settings()[ 'api_token' ] ) && empty( Helpers::get_settings()[ 'self_hosted_domain' ] ),
+							'disabled' => empty( Helpers::get_settings()[ 'api_token' ] ) &&
+								empty( Helpers::get_settings()[ 'self_hosted_domain' ] ),
 						],
 					],
 				],
@@ -377,15 +385,13 @@ class Page extends API {
 					'slug'   => 'self_hosted_shared_link',
 					'type'   => 'group',
 					'desc'   => sprintf(
-						'<ol><li>' .
-						__(
+						'<ol><li>' . __(
 							'<a href="%s" target="_blank">Create a secure and private shared link</a> in your Plausible account.',
 							'plausible-analytics'
-						) .
-						'<li>' .
-						__( 'Paste the shared link in the text box to view your stats in your WordPress dashboard.', 'plausible-analytics' ) .
-						'</li>' .
-						'</li></ol>',
+						) . '<li>' . __(
+							'Paste the shared link in the text box to view your stats in your WordPress dashboard.',
+							'plausible-analytics'
+						) . '</li>' . '</li></ol>',
 						esc_url( 'https://plausible.io/docs/embed-dashboard' )
 					),
 					'fields' => [
@@ -425,7 +431,6 @@ class Page extends API {
 
 		/**
 		 * If proxy is enabled, or self-hosted domain has a value, display warning box.
-		 *
 		 * @see self::proxy_warning()
 		 */
 		if ( Helpers::proxy_enabled() || ! empty( $settings[ 'self_hosted_domain' ] ) ) {
@@ -458,7 +463,6 @@ class Page extends API {
 
 	/**
 	 * Init action hooks.
-	 *
 	 * @return void
 	 */
 	private function init() {
@@ -509,7 +513,6 @@ class Page extends API {
 
 	/**
 	 * Register Menu.
-	 *
 	 * @since  1.0.0
 	 * @access public
 	 * @return void
@@ -579,7 +582,6 @@ class Page extends API {
 
 	/**
 	 * A little hack to add some classes to the core #wpcontent div.
-	 *
 	 * @return void
 	 */
 	public function add_background_color() {
@@ -590,7 +592,6 @@ class Page extends API {
 
 	/**
 	 * Statistics Page via Embed feature.
-	 *
 	 * @since  1.2.0
 	 * @access public
 	 * @return void
@@ -643,7 +644,6 @@ class Page extends API {
 		 * When this option was saved to the database, underlying code would fail, throwing a CORS related error in browsers.
 		 * Now, we explicitly check for the existence of this example "auth" key, and display a human-readable error message to
 		 * those who haven't properly set it up.
-		 *
 		 * @since v1.2.5
 		 * For self-hosters the View Stats option doesn't need to be enabled, if a Shared Link is entered, we can assume they want to View Stats.
 		 * For regular users, the shared link is provisioned by the API, so it shouldn't be empty.
@@ -707,7 +707,10 @@ class Page extends API {
 						); ?>
 					<?php else: ?>
 						<?php echo sprintf(
-							__( 'Please <a href="%s">click here</a> to enable <strong>View Stats in WordPress</strong>.', 'plausible-analytics' ),
+							__(
+								'Please <a href="%s">click here</a> to enable <strong>View Stats in WordPress</strong>.',
+								'plausible-analytics'
+							),
 							admin_url( 'options-general.php?page=plausible_analytics#is_shared_link' )
 						);
 						?>

@@ -5,7 +5,7 @@ Tags: analytics, google analytics, web analytics, stats, privacy
 Requires at least: 5.3
 Tested up to: 6.6
 Requires PHP: 7.0
-Stable tag: 2.1.4
+Stable tag: 2.2.0
 License: Massachusetts Institute of Technology (MIT) license
 License URI: https://opensource.org/licenses/MIT
 
@@ -13,7 +13,7 @@ Plausible Analytics is an easy-to-use, open source, lightweight and privacy-frie
 
 == Description ==
 
-Plausible Analytics is an easy-to-use, open source, lightweight (<1 KB) and privacy-friendly web analytics alternative to Google Analytics.
+Plausible Analytics is an easy-to-use, open source, lightweight and privacy-friendly web analytics alternative to Google Analytics.
 
 Plausible Analytics doesn’t use cookies and is fully compliant with GDPR, CCPA and PECR. Made and hosted in the EU, powered by European-owned cloud infrastructure 🇪🇺.
 
@@ -29,7 +29,7 @@ We're completely independent, self-funded, bootstrapped and debt-free. We're not
 
 Google Analytics is frustrating to use, difficult to understand, slow to load and privacy-invasive. That's why we built Plausible Analytics, a simple but powerful, lightweight, open source and privacy-friendly alternative. 
 
-Here's what makes Plausible a great Google Analytics alternative and why over 12,000 paying subscribers trust us with their website and business insights:
+Here's what makes Plausible a great Google Analytics alternative and why over 14,000 paying subscribers trust us with their website and business insights:
 
 ### Smooth transition from Google Analytics
 
@@ -41,7 +41,7 @@ Plausible is simple analytics. It is easy to understand and it cuts through the 
 
 ### Lightweight script that keeps your site speed fast
 
-Plausible is lightweight analytics. Our script is 45 times smaller than Google Analytics. Your page weight will be cut down, your site will load faster and you'll reduce your carbon footprint for a greener and more sustainable web. A site with 10,000 monthly visitors can save 4.5 kg of CO2 emissions per year by switching.
+Plausible is lightweight analytics. Our script is 75 times smaller than Google Analytics. Your page weight will be cut down, your site will load faster and you'll reduce your carbon footprint for a greener and more sustainable web. A site with 100,000 monthly visitors can save 8.2 kg of CO2 emissions per year by switching.
 
 ### No need for cookie banners or GDPR consent
 
@@ -49,7 +49,7 @@ Plausible is privacy-friendly analytics. All the site measurement is carried out
 
 ### Track events and marketing campaigns
 
-Plausible is useful. Segment your audience by any metric you click on. Answer the important questions about your visitors, content and referral sources. Analyze paid campaigns using UTM parameters. Track site search terms, outbound link clicks, file downloads, 404 error pages, post authors, post categories and custom taxonomies without manually configuring anything or writing any code.
+Plausible is useful. Segment your audience by any metric you click on. Answer the important questions about your visitors, content and referral sources. Analyze paid campaigns using UTM parameters. Track site search terms, outbound link clicks, file downloads, form completions, 404 error pages, post authors, post categories and custom taxonomies without manually configuring anything or writing any code.
 
 ### Built-in WooCommerce analytics
 
@@ -71,7 +71,7 @@ Plausible is open source analytics. Our source code is available and accessible 
 * Get more accurate stats and count those who use adblockers by running the Plausible script as a first-party connection from your domain name
 * View your Plausible stats directly in your WordPress dashboard (you can grant access to other user roles too)
 * Tracking of admin users is disabled by default (you can also disable tracking of other user roles)
-* Enable WooCommerce revenue, file downloads, external link clicks, site search terms and 404 error pages tracking 
+* Enable WooCommerce revenue, file downloads, external link clicks, site search terms, form completions and 404 error pages tracking 
 * Enable automated tracking of post authors, post categories and custom taxonomies for better content analysis
 * Custom events and custom dimensions can be setup using CSS class names directly in the WordPress editor
 * Integrate with Google Search Console so you can see search queries people use to find your site in Google's search results
@@ -154,6 +154,13 @@ Contact us: https://plausible.io/contact
 Please make sure you make a backup of your database before updating any version to ensure that none of your data is lost.
 
 == Changelog ==
+
+= 2.2.0 | February 5th, 2025 =
+Fixed: N/A in CE edition message wasn't shown properly when certain options were toggled.
+Fixed: Create Plugin Token message was removed when View Stats was disabled.
+Fixed: when toggling options, some messages in the Settings screen were duplicated.
+Added: new enhanced measurement - Form Completions, tested with all major forms plugins.
+Fixed: WP Rocket compatibility no longer worked, because a filter name was changed in a recent release of WP Rocket.
 
 = 2.1.4 | September 25th, 2024 =
 * Improved: when no token was entered, the API client would keep trying to verify the connection. This is now fixed.

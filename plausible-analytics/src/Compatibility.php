@@ -58,7 +58,8 @@ class Compatibility {
 			add_filter( 'rocket_excluded_inline_js_content', [ $this, 'exclude_plausible_inline_js' ] );
 			add_filter( 'rocket_exclude_js', [ $this, 'exclude_plausible_js' ] );
 			add_filter( 'rocket_minify_excluded_external_js', [ $this, 'exclude_plausible_js' ] );
-			add_filter( 'rocket_delay_js_scripts', [ $this, 'exclude_plausible_js' ] );
+			add_filter( 'rocket_delay_js_exclusions', [ $this, 'exclude_plausible_inline_js' ] );
+			add_filter( 'rocket_exclude_defer_js', [ $this, 'exclude_plausible_js_by_relative_url' ] );
 		}
 	}
 
@@ -86,9 +87,7 @@ class Compatibility {
 	 * @return array
 	 */
 	public function exclude_plausible_inline_js( $inline_js ) {
-		if ( ! isset( $inline_js[ 'plausible' ] ) ) {
-			$inline_js[ 'plausible' ] = 'window.plausible';
-		}
+		$inline_js[ 'plausible' ] = 'window.plausible';
 
 		return $inline_js;
 	}
@@ -106,6 +105,23 @@ class Compatibility {
 	 */
 	public function exclude_plausible_js( $excluded_js ) {
 		$excluded_js[] = Helpers::get_js_url( true );
+
+		return $excluded_js;
+	}
+
+	/**
+	 * Dear WP Rocket/SG Optimizer/Etc., don't minify/combine/delay our external JS, please.
+	 *
+	 * @filter rocket_exclude_js
+	 * @filter rocket_minify_excluded_external_js
+	 * @since  1.2.5
+	 *
+	 * @param array $excluded_js
+	 *
+	 * @return array
+	 */
+	public function exclude_plausible_js_by_relative_url( $excluded_js ) {
+		$excluded_js[] = preg_replace( '/http[s]?:\/\/.*?(\/)/', '$1', Helpers::get_js_url( true ) );
 
 		return $excluded_js;
 	}

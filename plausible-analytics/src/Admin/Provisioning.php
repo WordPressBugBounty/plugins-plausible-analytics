@@ -1,7 +1,6 @@
 <?php
 /**
  * Plausible Analytics | Provisioning.
- *
  * @since      2.0.0
  * @package    WordPress
  * @subpackage Plausible Analytics
@@ -68,10 +67,11 @@ class Provisioning {
 		}
 
 		$this->custom_event_goals = [
-			'404'            => __( '404', 'plausible-analytics' ),
-			'outbound-links' => __( 'Outbound Link: Click', 'plausible-analytics' ),
-			'file-downloads' => __( 'File Download', 'plausible-analytics' ),
-			'search'         => __( 'WP Search Queries', 'plausible-analytics' ),
+			'404'              => __( '404', 'plausible-analytics' ),
+			'outbound-links'   => __( 'Outbound Link: Click', 'plausible-analytics' ),
+			'file-downloads'   => __( 'File Download', 'plausible-analytics' ),
+			'search'           => __( 'WP Search Queries', 'plausible-analytics' ),
+			'form-completions' => __( 'WP Form Completions', 'plausible-analytics' ),
 		];
 
 		$this->init();
@@ -79,10 +79,8 @@ class Provisioning {
 
 	/**
 	 * Action & filter hooks.
-	 *
 	 * @return void
 	 * @throws ApiException
-	 *
 	 * @codeCoverageIgnore
 	 */
 	private function init() {
@@ -210,11 +208,11 @@ class Provisioning {
 	 * @param $settings
 	 *
 	 * @return void
-	 *
 	 * @codeCoverageIgnore Because we don't want to test the API.
 	 */
 	public function maybe_create_woocommerce_funnel( $old_settings, $settings ) {
-		if ( ! Helpers::is_enhanced_measurement_enabled( 'revenue', $settings[ 'enhanced_measurements' ] ) || ! Integrations::is_wc_active() ) {
+		if ( ! Helpers::is_enhanced_measurement_enabled( 'revenue', $settings[ 'enhanced_measurements' ] ) ||
+			! Integrations::is_wc_active() ) {
 			return; // @codeCoverageIgnore
 		}
 
@@ -254,7 +252,6 @@ class Provisioning {
 	 * @param $steps
 	 *
 	 * @return void
-	 *
 	 * @codeCoverageIgnore Because this method should be mocked in tests if needed.
 	 */
 	private function create_funnel( $name, $steps ) {
@@ -325,14 +322,13 @@ class Provisioning {
 	}
 
 	/**
-	 * Delete all custom WooCommerce event goals if Revenue setting is disabled. The funnel is deleted when the minimum required no. of goals is no
-	 * longer met.
+	 * Delete all custom WooCommerce event goals if Revenue setting is disabled. The funnel is deleted when the minimum
+	 * required no. of goals is no longer met.
 	 *
 	 * @param $old_settings
 	 * @param $settings
 	 *
 	 * @return void
-	 *
 	 * @codeCoverageIgnore Because we don't want to test if the API is working.
 	 */
 	public function maybe_delete_woocommerce_goals( $old_settings, $settings ) {
@@ -361,14 +357,13 @@ class Provisioning {
 	}
 
 	/**
-	 * Searches an array for the presence of $string within each element's value. Strips currencies using a regex, e.g. (USD), because these are
-	 * added to revenue goals by Plausible.
+	 * Searches an array for the presence of $string within each element's value. Strips currencies using a regex, e.g.
+	 * (USD), because these are added to revenue goals by Plausible.
 	 *
 	 * @param string $string
 	 * @param array  $haystack
 	 *
 	 * @return false|mixed
-	 *
 	 * @codeCoverageIgnore Because it can't be unit tested.
 	 */
 	private function array_search_contains( $string, $haystack ) {
@@ -390,7 +385,6 @@ class Provisioning {
 	 * @param array $settings
 	 *
 	 * @return void
-	 *
 	 * @codeCoverageIgnore Because we don't want to test if the API is working.
 	 */
 	public function maybe_create_custom_properties( $old_settings, $settings ) {
@@ -417,7 +411,8 @@ class Provisioning {
 		/**
 		 * Create Custom Properties for WooCommerce integration.
 		 */
-		if ( Helpers::is_enhanced_measurement_enabled( 'revenue', $enhanced_measurements ) && Integrations::is_wc_active() ) {
+		if ( Helpers::is_enhanced_measurement_enabled( 'revenue', $enhanced_measurements ) &&
+			Integrations::is_wc_active() ) {
 			foreach ( WooCommerce::CUSTOM_PROPERTIES as $property ) {
 				$properties[] = new Client\Model\CustomProp( [ 'custom_prop' => [ 'key' => $property ] ] );
 			}

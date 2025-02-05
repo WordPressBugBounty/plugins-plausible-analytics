@@ -1,7 +1,6 @@
 <?php
 /**
  * Plausible Analytics | Actions.
- *
  * @since      1.0.0
  * @package    WordPress
  * @subpackage Plausible Analytics
@@ -12,7 +11,6 @@ namespace Plausible\Analytics\WP;
 class Actions {
 	/**
 	 * Constructor.
-	 *
 	 * @since  1.0.0
 	 * @access public
 	 * @return void
@@ -24,9 +22,8 @@ class Actions {
 	}
 
 	/**
-	 * This <meta> tag "tells" the Plausible API which version of the plugin is used, to allow tailored error messages, specific to the plugin
-	 * version.
-	 *
+	 * This <meta> tag "tells" the Plausible API which version of the plugin is used, to allow tailored error messages,
+	 * specific to the plugin version.
 	 * @return void
 	 */
 	public function insert_version_meta_tag() {
@@ -37,7 +34,6 @@ class Actions {
 
 	/**
 	 * Register Assets.
-	 *
 	 * @since  1.0.0
 	 * @access public
 	 * @return void
@@ -56,9 +52,16 @@ class Actions {
 		}
 
 		$version =
-			Helpers::proxy_enabled() && file_exists( Helpers::get_js_path() ) ? filemtime( Helpers::get_js_path() ) : PLAUSIBLE_ANALYTICS_VERSION;
+			Helpers::proxy_enabled() && file_exists( Helpers::get_js_path() ) ? filemtime( Helpers::get_js_path() ) :
+				PLAUSIBLE_ANALYTICS_VERSION;
 
-		wp_enqueue_script( 'plausible-analytics', Helpers::get_js_url( true ), '', $version, apply_filters( 'plausible_load_js_in_footer', false ) );
+		wp_enqueue_script(
+			'plausible-analytics',
+			Helpers::get_js_url( true ),
+			'',
+			$version,
+			apply_filters( 'plausible_load_js_in_footer', false )
+		);
 
 		// Goal tracking inline script (Don't disable this as it is required by 404).
 		wp_add_inline_script(
@@ -77,7 +80,7 @@ class Actions {
 			);
 
 			/**
-			 * Documentation.location.pathname is a variable. @see wp_json_encode() doesn't allow passing variable, only strings. This fixes that.
+			 * document.location.pathname is a variable. @see wp_json_encode() doesn't allow passing variable, only strings. This fixes that.
 			 */
 			$data = str_replace( '"document.location.pathname"', 'document.location.pathname', $data );
 
@@ -94,14 +97,18 @@ class Actions {
 			$data   = wp_json_encode(
 				[
 					'props' => [
-						'search_query' => get_search_query(),
+						// convert queries to lowercase and remove trailing whitespace to ensure same terms are grouped together
+						'search_query' => strtolower( trim( get_search_query() ) ),
 						'result_count' => $wp_query->found_posts,
 					],
 				]
 			);
 			$script = "plausible('WP Search Queries', $data );";
 
-			wp_add_inline_script( 'plausible-analytics', "document.addEventListener('DOMContentLoaded', function() {\n$script\n});" );
+			wp_add_inline_script(
+				'plausible-analytics',
+				"document.addEventListener('DOMContentLoaded', function() {\n$script\n});"
+			);
 		}
 
 		// This action allows you to add your own custom scripts!
@@ -110,7 +117,6 @@ class Actions {
 
 	/**
 	 * Create admin bar nodes.
-	 *
 	 * @since  1.3.0
 	 * @access public
 	 *
@@ -125,13 +131,32 @@ class Actions {
 			return; // @codeCoverageIgnore
 		}
 
+		$settings = Helpers::get_settings();
+		$current_user = wp_get_current_user();
+
+		$has_access             = false;
+		$user_roles_have_access = array_merge(
+			[ 'administrator' ],
+			$settings['expand_dashboard_access'] ?? []
+		);
+
+		foreach ( $current_user->roles as $role ) {
+			if ( in_array( $role, $user_roles_have_access, true ) ) {
+				$has_access = true;
+				break;
+			}
+		}
+
+		if ( ! $has_access ) {
+			return;
+		}
+
 		// Add main admin bar node.
 		$args[] = [
 			'id'    => 'plausible-analytics',
 			'title' => 'Plausible Analytics',
 		];
 
-		$settings = Helpers::get_settings();
 
 		if ( ! empty( $settings[ 'enable_analytics_dashboard' ] ) ||
 			( ! empty( $settings[ 'self_hosted_domain' ] ) && ! empty( $settings[ 'self_hosted_shared_link' ] ) ) ) {
@@ -161,12 +186,14 @@ class Actions {
 		}
 
 		// Add link to Plausible Settings page.
-		$args[] = [
-			'id'     => 'settings',
-			'title'  => esc_html__( 'Settings', 'plausible-analytics' ),
-			'href'   => admin_url( 'options-general.php?page=plausible_analytics' ),
-			'parent' => 'plausible-analytics',
-		];
+		if ( current_user_can( 'manage_options' ) ) {
+			$args[] = [
+				'id'     => 'settings',
+				'title'  => esc_html__( 'Settings', 'plausible-analytics' ),
+				'href'   => admin_url( 'options-general.php?page=plausible_analytics' ),
+				'parent' => 'plausible-analytics',
+			];
+		}
 
 		foreach ( $args as $arg ) {
 			$admin_bar->add_node( $arg );
