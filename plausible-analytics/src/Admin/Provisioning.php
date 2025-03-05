@@ -19,15 +19,33 @@ use Plausible\Analytics\WP\Integrations;
 use Plausible\Analytics\WP\Integrations\WooCommerce;
 
 class Provisioning {
-	/**
-	 * @var ClientFactory
-	 */
-	private $client_factory;
+	const CUSTOM_PROPERTIES = [
+		'cart_total',
+		'cart_total_items',
+		'id',
+		'name',
+		'price',
+		'product_id',
+		'product_name',
+		'quantity',
+		'shipping',
+		'subtotal',
+		'subtotal_tax',
+		'tax_class',
+		'total',
+		'total_tax',
+		'variation_id',
+	];
 
 	/**
 	 * @var Client $client
 	 */
-	private $client;
+	public $client;
+
+	/**
+	 * @var ClientFactory
+	 */
+	private $client_factory;
 
 	/**
 	 * @var string[] $custom_event_goals
@@ -90,9 +108,7 @@ class Provisioning {
 
 		add_action( 'update_option_plausible_analytics_settings', [ $this, 'create_shared_link' ], 10, 2 );
 		add_action( 'update_option_plausible_analytics_settings', [ $this, 'maybe_create_goals' ], 10, 2 );
-		add_action( 'update_option_plausible_analytics_settings', [ $this, 'maybe_create_woocommerce_funnel' ], 10, 2 );
 		add_action( 'update_option_plausible_analytics_settings', [ $this, 'maybe_delete_goals' ], 11, 2 );
-		add_action( 'update_option_plausible_analytics_settings', [ $this, 'maybe_delete_woocommerce_goals' ], 11, 2 );
 		add_action( 'update_option_plausible_analytics_settings', [ $this, 'maybe_create_custom_properties' ], 11, 2 );
 	}
 
@@ -179,7 +195,7 @@ class Provisioning {
 	 *
 	 * @return void
 	 */
-	private function create_goals( $goals ) {
+	public function create_goals( $goals ) {
 		if ( empty( $goals ) ) {
 			return; // @codeCoverageIgnore
 		}
@@ -204,48 +220,6 @@ class Provisioning {
 	}
 
 	/**
-	 * @param $old_settings
-	 * @param $settings
-	 *
-	 * @return void
-	 * @codeCoverageIgnore Because we don't want to test the API.
-	 */
-	public function maybe_create_woocommerce_funnel( $old_settings, $settings ) {
-		if ( ! Helpers::is_enhanced_measurement_enabled( 'revenue', $settings[ 'enhanced_measurements' ] ) ||
-			! Integrations::is_wc_active() ) {
-			return; // @codeCoverageIgnore
-		}
-
-		$goals       = [];
-		$woocommerce = new WooCommerce( false );
-
-		foreach ( $woocommerce->event_goals as $event_key => $event_goal ) {
-			// Don't add this goal to the funnel. Create it separately instead.
-			if ( $event_key === 'remove-from-cart' ) {
-				$this->create_goals( [ $this->create_goal_request( $event_goal ) ] );
-
-				continue;
-			}
-
-			if ( $event_key === 'purchase' ) {
-				$goals[] = $this->create_goal_request( $event_goal, 'Revenue', get_woocommerce_currency() );
-
-				continue;
-			}
-
-			if ( $event_key === 'view-product' ) {
-				$goals[] = $this->create_goal_request( $event_goal, 'Pageview', null, '/product*' );
-
-				continue;
-			}
-
-			$goals[] = $this->create_goal_request( $event_goal );
-		}
-
-		$this->create_funnel( __( 'Woo Purchase Funnel', 'plausible-analytics' ), $goals );
-	}
-
-	/**
 	 * Creates a funnel and creates goals if they don't exist.
 	 *
 	 * @param $name
@@ -254,7 +228,7 @@ class Provisioning {
 	 * @return void
 	 * @codeCoverageIgnore Because this method should be mocked in tests if needed.
 	 */
-	private function create_funnel( $name, $steps ) {
+	public function create_funnel( $name, $steps ) {
 		$create_request = new Client\Model\FunnelCreateRequest(
 			[
 				'funnel' => [
@@ -322,41 +296,6 @@ class Provisioning {
 	}
 
 	/**
-	 * Delete all custom WooCommerce event goals if Revenue setting is disabled. The funnel is deleted when the minimum
-	 * required no. of goals is no longer met.
-	 *
-	 * @param $old_settings
-	 * @param $settings
-	 *
-	 * @return void
-	 * @codeCoverageIgnore Because we don't want to test if the API is working.
-	 */
-	public function maybe_delete_woocommerce_goals( $old_settings, $settings ) {
-		$enhanced_measurements = array_filter( $settings[ 'enhanced_measurements' ] );
-
-		// Setting is enabled, no need to continue.
-		if ( Helpers::is_enhanced_measurement_enabled( 'revenue', $enhanced_measurements ) ) {
-			return;
-		}
-
-		$goals           = get_option( 'plausible_analytics_enhanced_measurements_goal_ids', [] );
-		$woo_integration = new WooCommerce( false );
-
-		foreach ( $goals as $id => $name ) {
-			$key = $this->array_search_contains( $name, $woo_integration->event_goals );
-
-			if ( $key ) {
-				$this->client->delete_goal( $id );
-
-				unset( $goals[ $id ] );
-			}
-		}
-
-		// Refresh the stored IDs in the DB.
-		update_option( 'plausible_analytics_enhanced_measurements_goal_ids', $goals );
-	}
-
-	/**
 	 * Searches an array for the presence of $string within each element's value. Strips currencies using a regex, e.g.
 	 * (USD), because these are added to revenue goals by Plausible.
 	 *
@@ -366,13 +305,13 @@ class Provisioning {
 	 * @return false|mixed
 	 * @codeCoverageIgnore Because it can't be unit tested.
 	 */
-	private function array_search_contains( $string, $haystack ) {
+	public function array_search_contains( $string, $haystack ) {
 		if ( preg_match( '/\([A-Z]*?\)/', $string ) ) {
 			$string = preg_replace( '/ \([A-Z]*?\)/', '', $string );
 		}
 
 		foreach ( $haystack as $key => $value ) {
-			if ( strpos( $value, $string ) !== false ) {
+			if ( str_contains( $value, $string ) ) {
 				return $key;
 			}
 		}
@@ -411,9 +350,8 @@ class Provisioning {
 		/**
 		 * Create Custom Properties for WooCommerce integration.
 		 */
-		if ( Helpers::is_enhanced_measurement_enabled( 'revenue', $enhanced_measurements ) &&
-			Integrations::is_wc_active() ) {
-			foreach ( WooCommerce::CUSTOM_PROPERTIES as $property ) {
+		if ( Helpers::is_enhanced_measurement_enabled( 'revenue', $enhanced_measurements ) && ( Integrations::is_wc_active() || Integrations::is_edd_active() ) ) {
+			foreach ( self::CUSTOM_PROPERTIES as $property ) {
 				$properties[] = new Client\Model\CustomProp( [ 'custom_prop' => [ 'key' => $property ] ] );
 			}
 		}

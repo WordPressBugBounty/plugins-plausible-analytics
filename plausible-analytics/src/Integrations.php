@@ -10,7 +10,9 @@
 namespace Plausible\Analytics\WP;
 
 class Integrations {
-	const SCRIPT_WRAPPER = '<script defer id="plausible-analytics-integration-tracking">document.addEventListener("DOMContentLoaded", () => { %s });</script>';
+	const PURCHASE_TRACKED_META_KEY = '_plausible_analytics_purchase_tracked';
+
+	const SCRIPT_WRAPPER            = '<script defer id="plausible-analytics-integration-tracking">document.addEventListener("DOMContentLoaded", () => { %s });</script>';
 
 	/**
 	 * Build class.
@@ -31,9 +33,10 @@ class Integrations {
 
 		// Easy Digital Downloads
 		if ( self::is_edd_active() ) {
-			// new Integrations\EDD();
+			new Integrations\EDD();
 		}
 
+		// Form Plugins
 		if ( self::is_form_submit_active() ) {
 			new Integrations\FormSubmit();
 		}
@@ -60,9 +63,6 @@ class Integrations {
 	 * @return mixed|null
 	 */
 	public static function is_form_submit_active() {
-		return apply_filters(
-			'plausible_analytics_integrations_form_submit',
-			Helpers::is_enhanced_measurement_enabled( 'form-completions' )
-		);
+		return apply_filters( 'plausible_analytics_integrations_form_submit', Helpers::is_enhanced_measurement_enabled( 'form-completions' ) );
 	}
 }

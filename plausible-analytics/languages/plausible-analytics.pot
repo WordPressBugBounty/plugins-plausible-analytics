@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Plausible Analytics Team <hello@plausible.io>\n"
-"POT-Creation-Date: 2025-02-05 15:20+0000\n"
+"POT-Creation-Date: 2025-03-05 09:53+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/plausible/wordpress/issues/new\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -113,47 +113,59 @@ msgstr ""
 msgid "Plausible's proxy couldn't be enabled, because the WordPress API is inaccessible. This might be due to a conflicting setting in a (security) plugin or server firewall. Make sure you whitelist requests to the Proxy's endpoint: <code>%1$s</code>. <a href=\"%2$s\" target=\"_blank\">Contact support</a> if you need help locating the issue."
 msgstr ""
 
-#: src/Admin/Provisioning.php:70
+#: src/Admin/Provisioning.php:88
 msgid "404"
 msgstr ""
 
-#: src/Admin/Provisioning.php:71
+#: src/Admin/Provisioning.php:89
 msgid "Outbound Link: Click"
 msgstr ""
 
-#: src/Admin/Provisioning.php:72
+#: src/Admin/Provisioning.php:90
 msgid "File Download"
 msgstr ""
 
-#: src/Admin/Provisioning.php:73
+#: src/Admin/Provisioning.php:91
 msgid "WP Search Queries"
 msgstr ""
 
-#: src/Admin/Provisioning.php:74, src/Integrations/FormSubmit.php:54, src/Integrations/FormSubmit.php:78
+#: src/Admin/Provisioning.php:92, src/Integrations/FormSubmit.php:54, src/Integrations/FormSubmit.php:78
 msgid "WP Form Completions"
 msgstr ""
 
-#: src/Admin/Provisioning.php:245
-msgid "Woo Purchase Funnel"
+#: src/Integrations/EDD.php:36, src/Integrations/WooCommerce.php:39
+msgid "Visit %s*"
 msgstr ""
 
-#: src/Integrations/WooCommerce.php:50
-msgid "Visit /product*"
+#: src/Integrations/EDD.php:37
+msgid "EDD Add to Cart"
 msgstr ""
 
-#: src/Integrations/WooCommerce.php:51
+#: src/Integrations/EDD.php:38
+msgid "EDD Remove from Cart"
+msgstr ""
+
+#: src/Integrations/EDD.php:39
+msgid "EDD Start Checkout"
+msgstr ""
+
+#: src/Integrations/EDD.php:40
+msgid "EDD Complete Purchase"
+msgstr ""
+
+#: src/Integrations/WooCommerce.php:40
 msgid "Woo Add to Cart"
 msgstr ""
 
-#: src/Integrations/WooCommerce.php:52
+#: src/Integrations/WooCommerce.php:41
 msgid "Woo Remove from Cart"
 msgstr ""
 
-#: src/Integrations/WooCommerce.php:53
+#: src/Integrations/WooCommerce.php:42
 msgid "Woo Start Checkout"
 msgstr ""
 
-#: src/Integrations/WooCommerce.php:54
+#: src/Integrations/WooCommerce.php:43
 msgid "Woo Complete Purchase"
 msgstr ""
 
@@ -476,4 +488,12 @@ msgstr ""
 
 #: src/Admin/Settings/Page.php:683
 msgid "Plausible Analytics\' statistics couldn\'t be loaded. Please disable your ad blocker."
+msgstr ""
+
+#: src/Admin/Provisioning/Integrations/EDD.php:57
+msgid "EDD Purchase Funnel"
+msgstr ""
+
+#: src/Admin/Provisioning/Integrations/WooCommerce.php:58
+msgid "Woo Purchase Funnel"
 msgstr ""

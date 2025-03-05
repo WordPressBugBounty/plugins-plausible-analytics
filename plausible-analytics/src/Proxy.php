@@ -80,10 +80,7 @@ class Proxy {
 
 		$settings = [];
 
-		if ( array_key_exists( 'option_name', $_POST ) &&
-			$_POST[ 'option_name' ] == 'proxy_enabled' &&
-			array_key_exists( 'option_value', $_POST ) &&
-			$_POST[ 'option_value' ] == 'on' ) {
+		if ( array_key_exists( 'option_name', $_POST ) && $_POST[ 'option_name' ] == 'proxy_enabled' && array_key_exists( 'option_value', $_POST ) && $_POST[ 'option_value' ] == 'on' ) {
 			$settings[ 'proxy_enabled' ] = 'on'; // @codeCoverageIgnore
 		}
 
@@ -115,7 +112,10 @@ class Proxy {
 			'u' => $url ?: wp_get_referer(),
 		];
 
-		if ( ! empty( $props ) ) {
+		// Revenue events use a different approach.
+		if ( isset( $props[ 'revenue' ] ) ) {
+			$body[ 'revenue' ] = reset( $props ); // @codeCoverageIgnore
+		} elseif ( ! empty( $props ) ) {
 			$body[ 'p' ] = $props; // @codeCoverageIgnore
 		}
 

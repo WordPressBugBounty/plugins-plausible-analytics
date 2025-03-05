@@ -10,6 +10,7 @@
 namespace Plausible\Analytics\WP\Admin;
 
 use Exception;
+use Plausible\Analytics\WP\Admin\Provisioning\Integrations;
 use Plausible\Analytics\WP\Helpers;
 
 /**
@@ -75,6 +76,10 @@ class Upgrades {
 
 		if ( version_compare( $plausible_analytics_version, '2.1.0', '<' ) ) {
 			$this->upgrade_to_210();
+		}
+
+		if ( version_compare( $plausible_analytics_version, '2.3.0', '<' ) ) {
+			$this->upgrade_to_230();
 		}
 
 		// Add required upgrade routines for future versions here.
@@ -254,9 +259,10 @@ class Upgrades {
 	}
 
 	/**
-	 * v2.0.8 and older contained a bug that
+	 * v2.0.8 and older contained a bug that caused the Enhanced Measurement option to not be an array in some cases.
 	 *
 	 * @return void
+	 * @codeCoverageIgnore
 	 */
 	public function upgrade_to_210() {
 		$settings = Helpers::get_settings();
@@ -268,5 +274,28 @@ class Upgrades {
 		update_option( 'plausible_analytics_settings', $settings );
 
 		update_option( 'plausible_analytics_version', '2.1.0' );
+	}
+
+	/**
+	 * If EDD is active and Ecommerce is enabled, create goals after updating the plugin.
+	 *
+	 * @since              v2.3.0
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore because all we'd be doing is testing the Plugins API.
+	 */
+	public function upgrade_to_230() {
+		$settings = Helpers::get_settings();
+
+		if ( Helpers::is_enhanced_measurement_enabled( 'revenue' ) ) {
+			$edd_provisioning = new Provisioning\Integrations\EDD( new Integrations() );
+			$provisioning     = new Provisioning();
+
+			$provisioning->maybe_create_custom_properties( [], $settings );
+			$edd_provisioning->maybe_create_edd_funnel( [], $settings );
+		}
+
+		update_option( 'plausible_analytics_version', '2.3.0' );
 	}
 }

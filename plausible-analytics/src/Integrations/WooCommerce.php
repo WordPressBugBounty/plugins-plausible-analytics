@@ -9,32 +9,13 @@
 
 namespace Plausible\Analytics\WP\Integrations;
 
+use Plausible\Analytics\WP\Admin\Provisioning;
 use Plausible\Analytics\WP\Integrations;
 use Plausible\Analytics\WP\Proxy;
 use WC_Cart;
 use WC_Product;
 
 class WooCommerce {
-	const PURCHASE_TRACKED_META_KEY = '_plausible_analytics_purchase_tracked';
-
-	const CUSTOM_PROPERTIES         = [
-		'cart_total',
-		'cart_total_items',
-		'id',
-		'name',
-		'price',
-		'product_id',
-		'product_name',
-		'quantity',
-		'shipping',
-		'subtotal',
-		'subtotal_tax',
-		'tax_class',
-		'total',
-		'total_tax',
-		'variation_id',
-	];
-
 	/**
 	 * @var array Custom Event Goals used to track Events in WooCommerce.
 	 */
@@ -46,8 +27,16 @@ class WooCommerce {
 	 * @codeCoverageIgnore
 	 */
 	public function __construct( $init = true ) {
+		$uri = wc_get_permalink_structure()[ 'product_base' ];
+
+		if ( is_multisite() ) {
+			$uri = get_blog_details()->path . $uri;
+		} else {
+			$uri = '/' . $uri;
+		}
+
 		$this->event_goals = [
-			'view-product'     => __( 'Visit /product*', 'plausible-analytics' ),
+			'view-product'     => sprintf( __( 'Visit %s*', 'plausible-analytics' ), $uri ),
 			'add-to-cart'      => __( 'Woo Add to Cart', 'plausible-analytics' ),
 			'remove-from-cart' => __( 'Woo Remove from Cart', 'plausible-analytics' ),
 			'checkout'         => __( 'Woo Start Checkout', 'plausible-analytics' ),
@@ -172,7 +161,7 @@ class WooCommerce {
 			plausibleAddToCartForm.classList.add('plausible-event-name=<?php echo str_replace( ' ', '+', $this->event_goals[ 'add-to-cart' ] ); ?>');
 			plausibleAddToCartForm.classList.add('plausible-event-quantity=' + plausibleQuantity.value);
 			plausibleAddToCartForm.classList.add('plausible-event-product_id=<?php echo $product->get_id(); ?>');
-			plausibleAddToCartForm.classList.add('plausible-event-product_name=<?php echo str_replace( ' ', '+', $product->get_name( null ) ); ?>');
+			plausibleAddToCartForm.classList.add('plausible-event-product_name=<?php echo str_replace( [ ' ', '&' ], '+', addslashes( $product->get_name( null ) ) ); ?>');
 			plausibleAddToCartForm.classList.add('plausible-event-price=<?php echo $product->get_price( null ); ?>');
 
 			plausibleQuantity.addEventListener('change', function (e) {
@@ -244,7 +233,7 @@ class WooCommerce {
 	 */
 	private function clean_data( $product ) {
 		foreach ( $product as $key => $value ) {
-			if ( ! in_array( $key, self::CUSTOM_PROPERTIES ) ) {
+			if ( ! in_array( $key, Provisioning::CUSTOM_PROPERTIES ) ) {
 				unset( $product[ $key ] );
 			}
 		}
@@ -292,6 +281,12 @@ class WooCommerce {
 	}
 
 	/**
+	 * Tracks when a user enters the checkout process and sends event data to Plausible Analytics.
+	 *
+	 * This method checks if the current page is the checkout page. If it is, it collects relevant
+	 * cart information like subtotal, shipping, tax, and total, applies filters to allow custom properties,
+	 * encodes the data as JSON, and generates a JavaScript snippet to send the data to Plausible Analytics.
+	 *
 	 * @return void
 	 */
 	public function track_entered_checkout() {
@@ -327,7 +322,7 @@ class WooCommerce {
 	 */
 	public function track_purchase( $order_id ) {
 		$order      = wc_get_order( $order_id );
-		$is_tracked = $order->get_meta( self::PURCHASE_TRACKED_META_KEY );
+		$is_tracked = $order->get_meta( Integrations::PURCHASE_TRACKED_META_KEY );
 
 		if ( $is_tracked ) {
 			return; // @codeCoverageIgnore
@@ -342,7 +337,7 @@ class WooCommerce {
 
 		echo sprintf( Integrations::SCRIPT_WRAPPER, "window.plausible( '$label', $props )" );
 
-		$order->add_meta_data( self::PURCHASE_TRACKED_META_KEY, true );
+		$order->add_meta_data( Integrations::PURCHASE_TRACKED_META_KEY, true );
 		$order->save();
 	}
 }
