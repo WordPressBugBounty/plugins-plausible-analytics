@@ -13,6 +13,7 @@ use Plausible\Analytics\WP\Proxy;
 class FormSubmit {
 	/**
 	 * Build class.
+	 *
 	 * @codeCoverageIgnore
 	 */
 	public function __construct() {
@@ -21,7 +22,9 @@ class FormSubmit {
 
 	/**
 	 * Init
+	 *
 	 * @return void
+	 *
 	 * @codeCoverageIgnore
 	 */
 	private function init() {
@@ -33,11 +36,16 @@ class FormSubmit {
 		 * Contact Form 7 doesn't respect JS checkValidity() function, so this is a custom compatibility fix.
 		 */
 		add_filter( 'wpcf7_validate', [ $this, 'maybe_track_submission' ], 10, 2 );
+		/**
+		 * Gravity Forms contains its own form submission handler, so this is a custom compatibility fix.
+		 */
+		add_action( 'gform_after_submission', [ $this, 'track_gravity_forms_submission' ], 10 );
 	}
 
 	/**
 	 * Enqueues the required JavaScript for form submissions integration.
 	 * @return void
+	 *
 	 * @codeCoverageIgnore because there's nothing to test here.
 	 */
 	public function add_js() {
@@ -60,10 +68,13 @@ class FormSubmit {
 	/**
 	 * Tracks the form submission if CF7 says it's valid.
 	 *
+	 * @filter             wpcf7_validate
+	 *
 	 * @param \WPCF7_Validation $result Form submission result object containing validation results.
 	 * @param array             $tags   Array of tags associated with the form fields.
 	 *
 	 * @return \WPCF7_Validation
+	 *
 	 * @codeCoverageIgnore because we can't test XHR requests here.
 	 */
 	public function maybe_track_submission( $result, $tags ) {
@@ -73,15 +84,51 @@ class FormSubmit {
 			$post = get_post( $_POST[ '_wpcf7_container_post' ] );
 			$uri  = '/' . $post->post_name . '/';
 
-			$proxy = new Proxy( false );
-			$proxy->do_request(
-				__( 'WP Form Completions', 'plausible-analytics' ),
-				null,
-				null,
-				[ 'path' => $uri ]
-			);
+			$this->track_submission( $uri );
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Track submission using the Proxy.
+	 *
+	 * @param $uri
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore because we can't test XHR requests here.
+	 */
+	private function track_submission( $uri ) {
+		$proxy = new Proxy( false );
+
+		$proxy->do_request(
+			__( 'WP Form Completions', 'plausible-analytics' ),
+			null,
+			null,
+			[ 'path' => $uri ]
+		);
+	}
+
+	/**
+	 * Compatibility fix for Gravity Forms.
+	 *
+	 * @action             gform_after_submission
+	 *
+	 * @param $form
+	 * @param $entry
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore because we can't test XHR requests here.
+	 */
+	public function track_gravity_forms_submission( $form ) {
+		$uri = str_replace( home_url(), '', $form[ 'source_url' ] ) ?? '';
+
+		if ( empty( $uri ) ) {
+			return;
+		}
+
+		$this->track_submission( $uri );
 	}
 }

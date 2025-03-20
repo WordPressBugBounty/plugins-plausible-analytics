@@ -11,7 +11,9 @@ namespace Plausible\Analytics\WP\Admin;
 
 use Exception;
 use Plausible\Analytics\WP\Admin\Provisioning\Integrations;
+use Plausible\Analytics\WP\Client;
 use Plausible\Analytics\WP\Helpers;
+use Plausible\Analytics\WP\Setup;
 
 /**
  * Class Upgrades
@@ -80,6 +82,10 @@ class Upgrades {
 
 		if ( version_compare( $plausible_analytics_version, '2.3.0', '<' ) ) {
 			$this->upgrade_to_230();
+		}
+
+		if ( version_compare( $plausible_analytics_version, '2.3.1', '<' ) ) {
+			$this->upgrade_to_231();
 		}
 
 		// Add required upgrade routines for future versions here.
@@ -292,10 +298,28 @@ class Upgrades {
 			$edd_provisioning = new Provisioning\Integrations\EDD( new Integrations() );
 			$provisioning     = new Provisioning();
 
+			// No token entered.
+			if ( ! $provisioning->client instanceof Client ) {
+				return;
+			}
+
 			$provisioning->maybe_create_custom_properties( [], $settings );
 			$edd_provisioning->maybe_create_edd_funnel( [], $settings );
 		}
 
 		update_option( 'plausible_analytics_version', '2.3.0' );
+	}
+
+	/**
+	 * Make sure the cron event is scheduled. If it's already scheduled or the Proxy isn't enabled, it'll bail.
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_231() {
+		$setup = new Setup();
+
+		$setup->activate_cron();
+
+		update_option( 'plausible_analytics_version', '2.3.1' );
 	}
 }

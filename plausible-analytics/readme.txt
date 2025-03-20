@@ -3,9 +3,9 @@ Contributors: plausible, DaanvandenBergh
 Donate link: https://plausible.io/
 Tags: analytics, google analytics, web analytics, stats, privacy
 Requires at least: 5.9
-Tested up to: 6.6
-Requires PHP: 7.0
-Stable tag: 2.3.0
+Tested up to: 6.7
+Requires PHP: 7.2
+Stable tag: 2.3.1
 License: Massachusetts Institute of Technology (MIT) license
 License URI: https://opensource.org/licenses/MIT
 
@@ -29,7 +29,7 @@ We're completely independent, self-funded, bootstrapped and debt-free. We're not
 
 Google Analytics is frustrating to use, difficult to understand, slow to load and privacy-invasive. That's why we built Plausible Analytics, a simple but powerful, lightweight, open source and privacy-friendly alternative. 
 
-Here's what makes Plausible a great Google Analytics alternative and why over 14,000 paying subscribers trust us with their website and business insights:
+Here's what makes Plausible a great Google Analytics alternative and why over 15,000 paying subscribers trust us with their website and business insights:
 
 ### Smooth transition from Google Analytics
 
@@ -49,7 +49,7 @@ Plausible is privacy-friendly analytics. All the site measurement is carried out
 
 ### Track events and marketing campaigns
 
-Plausible is useful. Segment your audience by any metric you click on. Answer the important questions about your visitors, content and referral sources. Analyze paid campaigns using UTM parameters. Track site search terms, outbound link clicks, file downloads, form completions, 404 error pages, post authors, post categories and custom taxonomies without manually configuring anything or writing any code.
+Plausible is useful. Segment your audience by any metric you click on. Answer the important questions about your visitors, content and referral sources. Analyze paid campaigns using UTM parameters. Track scroll depth, site search terms, outbound link clicks, file downloads, form completions, 404 error pages, post authors, post categories and custom taxonomies without manually configuring anything or writing any code.
 
 ### Built-in WooCommerce and Easy Digital Downloads analytics
 
@@ -154,6 +154,14 @@ Contact us: https://plausible.io/contact
 Please make sure you make a backup of your database before updating any version to ensure that none of your data is lost.
 
 == Changelog ==
+
+= 2.3.1 | March 20th, 2025 =
+* Fixed: cronjob which updated JS library when Proxy enabled, didn't register properly.
+* Added: support for add to cart tracking through direct links, e.g. yourdomain.com?add-to-cart=1
+* Improved: added Gravity Forms compatibility to Form Completions enhanced measurement.
+* Improved: only rewrite JS script's ID attribute if IE compatibility is enabled.
+* Added: auto-enable customer user role tracking if EDD/WC is installed and Revenue tracking is enabled.
+* Added: features not available in plan are now disabled accordingly.
 
 = 2.3.0 | March 5th, 2025 =
 * Improved: Domain Name is now validated before it's stored in the database.

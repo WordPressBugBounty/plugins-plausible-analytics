@@ -65,4 +65,12 @@ class Integrations {
 	public static function is_form_submit_active() {
 		return apply_filters( 'plausible_analytics_integrations_form_submit', Helpers::is_enhanced_measurement_enabled( 'form-completions' ) );
 	}
+
+	/**
+	 * Checks if EDD Recurring is installed and activated.
+	 * @return mixed|null
+	 */
+	public static function is_edd_recurring_active() {
+		return apply_filters( 'plausible_analytics_integrations_edd_recurring', function_exists( 'EDD_Recurring' ) && Helpers::is_enhanced_measurement_enabled( 'revenue' ) );
+	}
 }

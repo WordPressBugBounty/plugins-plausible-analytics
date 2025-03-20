@@ -190,10 +190,12 @@ class Ajax {
 			 * Toggle lists.
 			 */
 			if ( $post_data[ 'toggle_status' ] === 'on' ) {
+				// If toggle is on, store the value under a new key.
 				if ( ! in_array( $post_data[ 'option_value' ], $settings[ $post_data[ 'option_name' ] ] ) ) {
 					$settings[ $post_data[ 'option_name' ] ][] = $post_data[ 'option_value' ];
 				}
 			} else {
+				// If toggle is off, find the key by its value and unset it.
 				if ( ( $key = array_search( $post_data[ 'option_value' ], $settings[ $post_data[ 'option_name' ] ] ) ) !== false ) {
 					unset( $settings[ $post_data[ 'option_name' ] ][ $key ] );
 				}

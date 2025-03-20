@@ -16,7 +16,6 @@ use Plausible\Analytics\WP\Client\Model\GoalCreateRequestRevenue;
 use Plausible\Analytics\WP\ClientFactory;
 use Plausible\Analytics\WP\Helpers;
 use Plausible\Analytics\WP\Integrations;
-use Plausible\Analytics\WP\Integrations\WooCommerce;
 
 class Provisioning {
 	const CUSTOM_PROPERTIES = [
@@ -110,6 +109,7 @@ class Provisioning {
 		add_action( 'update_option_plausible_analytics_settings', [ $this, 'maybe_create_goals' ], 10, 2 );
 		add_action( 'update_option_plausible_analytics_settings', [ $this, 'maybe_delete_goals' ], 11, 2 );
 		add_action( 'update_option_plausible_analytics_settings', [ $this, 'maybe_create_custom_properties' ], 11, 2 );
+		add_filter( 'pre_update_option_plausible_analytics_settings', [ $this, 'maybe_enable_customer_user_roles' ] );
 	}
 
 	/**
@@ -372,5 +372,33 @@ class Provisioning {
 		$create_request->setCustomProps( $properties );
 
 		$this->client->enable_custom_property( $create_request );
+	}
+
+	/**
+	 * Auto-enables tracking of the 'Customer' user role for WC, 'Subscriber' user role for EDD and 'EDD_Subscriber' user role for EDD Recurring
+	 * if Revenue tracking and one of these plugins is enabled.
+	 *
+	 * @param $settings
+	 *
+	 * @return array
+	 */
+	public function maybe_enable_customer_user_roles( $settings ) {
+		$enhanced_measurements = $settings[ 'enhanced_measurements' ];
+
+		if ( Helpers::is_enhanced_measurement_enabled( 'revenue', $enhanced_measurements ) ) {
+			if ( Integrations::is_wc_active() && ! in_array( 'customer', $settings[ 'tracked_user_roles' ] ) ) {
+				$settings[ 'tracked_user_roles' ][] = 'customer';
+			}
+
+			if ( Integrations::is_edd_active() && ! in_array( 'subscriber', $settings[ 'tracked_user_roles' ] ) ) {
+				$settings[ 'tracked_user_roles' ][] = 'subscriber';
+			}
+
+			if ( Integrations::is_edd_recurring_active() && ! in_array( 'edd_subscriber', $settings[ 'tracked_user_roles' ] ) ) {
+				$settings[ 'tracked_user_roles' ][] = 'edd_subscriber';
+			}
+		}
+
+		return $settings;
 	}
 }
