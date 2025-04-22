@@ -204,6 +204,10 @@ class WooCommerce {
 	 * @codeCoverageIgnore Because we can't test XHR requests here.
 	 */
 	public function track_add_to_cart( $product, $add_to_cart_data ) {
+		if ( ! $product ) {
+		    return;
+		}
+
 		$product_data  = $this->clean_data( $product->get_data() );
 		$added_to_cart = $this->clean_data( $add_to_cart_data );
 		$cart          = WC()->cart;

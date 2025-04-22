@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Plausible Analytics Team <hello@plausible.io>\n"
-"POT-Creation-Date: 2025-03-20 10:27+0000\n"
+"POT-Creation-Date: 2025-04-22 18:29+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/plausible/wordpress/issues/new\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -56,27 +56,27 @@ msgstr ""
 msgid "Oops! The Plugin Token you used is invalid. Please <a href=\"%s\" target=\"_blank\">create a new token</a>. <a target=\"_blank\" href=\"%s\">Read more</a>"
 msgstr ""
 
-#: src/Client.php:145
+#: src/Client.php:187
 msgid "Something went wrong while creating Shared Link: %s"
 msgstr ""
 
-#: src/Client.php:187
+#: src/Client.php:229
 msgid "Something went wrong, try again later."
 msgstr ""
 
-#: src/Client.php:271
+#: src/Client.php:275
 msgid "Something went wrong while creating Custom Event Goal: %s"
 msgstr ""
 
-#: src/Client.php:288
+#: src/Client.php:292
 msgid "Something went wrong while creating Funnel: %s"
 msgstr ""
 
-#: src/Client.php:305
+#: src/Client.php:309
 msgid "Something went wrong while deleting a Custom Event Goal: %s"
 msgstr ""
 
-#: src/Client.php:328
+#: src/Client.php:332
 msgid "Something went wrong while enabling Pageview Properties: %s"
 msgstr ""
 

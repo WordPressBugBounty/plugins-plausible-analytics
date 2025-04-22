@@ -11,7 +11,9 @@ use Plausible\Analytics\WP\Client\Configuration;
 use Plausible\Analytics\WP\Client\Model\Capabilities;
 use Plausible\Analytics\WP\Client\Model\CapabilitiesFeatures;
 use Plausible\Analytics\WP\Client\Model\CustomPropEnableRequestBulkEnable;
+use Plausible\Analytics\WP\Client\Model\FunnelCreateRequest;
 use Plausible\Analytics\WP\Client\Model\GoalCreateRequestBulkGetOrCreate;
+use Plausible\Analytics\WP\Client\Model\GoalListResponse;
 use Plausible\Analytics\WP\Client\Model\PaymentRequiredError;
 use Plausible\Analytics\WP\Client\Model\SharedLink;
 use Plausible\Analytics\WP\Client\Model\UnauthorizedError;
@@ -58,13 +60,15 @@ class Client {
 
 		$data_domain = $this->get_data_domain();
 		$token       = $this->api_instance->getConfig()->getPassword();
-		$is_valid    = strpos( $token, 'plausible-plugin' ) !== false && ! empty( $features->getGoals() ) && $data_domain === Helpers::get_domain();
+		$is_valid    = str_contains( $token, 'plausible-plugin' ) && ! empty( $features->getGoals() ) && $data_domain === Helpers::get_domain();
 
 		/**
 		 * Don't cache invalid API tokens.
 		 */
 		if ( $is_valid ) {
 			set_transient( 'plausible_analytics_valid_token', [ $token => true ], 86400 ); // @codeCoverageIgnore
+
+			$this->update_capabilities( $token ); // @codeCoverageIgnore
 		}
 
 		return $is_valid;
@@ -127,6 +131,44 @@ class Client {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Stores the capabilities for the currently entered API token in the DB for later use.
+	 *
+	 * @param $token
+	 *
+	 * @return false|array
+	 *
+	 * @codeCoverageIgnore
+	 */
+	private function update_capabilities( $token = '' ) {
+		$client_factory = new ClientFactory( $token );
+		/** @var Client $client */
+		$client = $client_factory->build();
+
+		if ( ! $client instanceof Client ) {
+			return false;
+		}
+
+		/** @var Client\Model\CapabilitiesFeatures $features */
+		$features = $client->get_features();
+
+		if ( ! $features ) {
+			return false;
+		}
+
+		$caps = [
+			'funnels' => $features->getFunnels(),
+			'goals'   => $features->getGoals(),
+			'props'   => $features->getProps(),
+			'revenue' => $features->getRevenueGoals(),
+			'stats'   => $features->getStatsApi(),
+		];
+
+		update_option( 'plausible_analytics_api_token_caps', $caps );
+
+		return $caps;
 	}
 
 	/**
@@ -218,49 +260,11 @@ class Client {
 	}
 
 	/**
-	 * Stores the capabilities for the currently entered API token in the DB for later use.
-	 *
-	 * @param $token
-	 *
-	 * @return false|array
-	 *
-	 * @codeCoverageIgnore
-	 */
-	private function update_capabilities( $token = '' ) {
-		$client_factory = new ClientFactory( $token );
-		/** @var Client $client */
-		$client = $client_factory->build();
-
-		if ( ! $client instanceof Client ) {
-			return false;
-		}
-
-		/** @var Client\Model\CapabilitiesFeatures $features */
-		$features = $client->get_features();
-
-		if ( ! $features ) {
-			return false;
-		}
-
-		$caps = [
-			'funnels' => $features->getFunnels(),
-			'goals'   => $features->getGoals(),
-			'props'   => $features->getProps(),
-			'revenue' => $features->getRevenueGoals(),
-			'stats'   => $features->getStatsApi(),
-		];
-
-		update_option( 'plausible_analytics_api_token_caps', $caps );
-
-		return $caps;
-	}
-
-	/**
 	 * Allows creating Custom Event Goals in bulk.
 	 *
 	 * @param GoalCreateRequestBulkGetOrCreate $goals
 	 *
-	 * @return Client\Model\PaymentRequiredError|Client\Model\PlausibleWebPluginsAPIControllersGoalsCreate201Response|Client\Model\UnauthorizedError|Client\Model\UnprocessableEntityError|null
+	 * @return GoalListResponse|PaymentRequiredError|UnauthorizedError|UnprocessableEntityError|void
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -275,7 +279,7 @@ class Client {
 	/**
 	 * Allows creating Funnels in bulk.
 	 *
-	 * @param \Plausible\Analytics\WP\Client\Model\FunnelCreateRequest $funnel
+	 * @param FunnelCreateRequest $funnel
 	 *
 	 * @return Client\Model\Funnel|PaymentRequiredError|UnauthorizedError|UnprocessableEntityError|void
 	 *

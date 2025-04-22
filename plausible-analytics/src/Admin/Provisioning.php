@@ -360,7 +360,13 @@ class Provisioning {
 		 * Create Custom Properties for Search Queries option.
 		 */
 		if ( Helpers::is_enhanced_measurement_enabled( 'search', $enhanced_measurements ) ) {
+			$caps = get_option( 'plausible_analytics_api_token_caps', [] );
+
 			foreach ( $this->custom_search_properties as $property ) {
+				if ( empty( $caps[ 'props' ] ) && $property === 'result_count' ) {
+					continue;
+				}
+
 				$properties[] = new Client\Model\CustomProp( [ 'custom_prop' => [ 'key' => $property ] ] );
 			}
 		}

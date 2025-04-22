@@ -27,17 +27,17 @@ class Integrations {
 	 */
 	private function init() {
 		// WooCommerce
-		if ( self::is_wc_active() ) {
+		if ( self::is_wc_active() && Helpers::is_enhanced_measurement_enabled( 'revenue' ) ) {
 			new Integrations\WooCommerce();
 		}
 
 		// Easy Digital Downloads
-		if ( self::is_edd_active() ) {
+		if ( self::is_edd_active() && Helpers::is_enhanced_measurement_enabled( 'revenue' ) ) {
 			new Integrations\EDD();
 		}
 
 		// Form Plugins
-		if ( self::is_form_submit_active() ) {
+		if ( Helpers::is_enhanced_measurement_enabled( 'form-completions' ) ) {
 			new Integrations\FormSubmit();
 		}
 	}
@@ -47,7 +47,7 @@ class Integrations {
 	 * @return bool
 	 */
 	public static function is_wc_active() {
-		return apply_filters( 'plausible_analytics_integrations_woocommerce', function_exists( 'WC' ) && Helpers::is_enhanced_measurement_enabled( 'revenue' ) );
+		return apply_filters( 'plausible_analytics_integrations_woocommerce', function_exists( 'WC' ) );
 	}
 
 	/**
@@ -55,15 +55,7 @@ class Integrations {
 	 * @return bool
 	 */
 	public static function is_edd_active() {
-		return apply_filters( 'plausible_analytics_integrations_edd', function_exists( 'EDD' ) && Helpers::is_enhanced_measurement_enabled( 'revenue' ) );
-	}
-
-	/**
-	 * Check if Form Submissions option is enabled in Enhanced Measurements.
-	 * @return mixed|null
-	 */
-	public static function is_form_submit_active() {
-		return apply_filters( 'plausible_analytics_integrations_form_submit', Helpers::is_enhanced_measurement_enabled( 'form-completions' ) );
+		return apply_filters( 'plausible_analytics_integrations_edd', function_exists( 'EDD' ) );
 	}
 
 	/**
@@ -71,6 +63,6 @@ class Integrations {
 	 * @return mixed|null
 	 */
 	public static function is_edd_recurring_active() {
-		return apply_filters( 'plausible_analytics_integrations_edd_recurring', function_exists( 'EDD_Recurring' ) && Helpers::is_enhanced_measurement_enabled( 'revenue' ) );
+		return apply_filters( 'plausible_analytics_integrations_edd_recurring', function_exists( 'EDD_Recurring' ) );
 	}
 }

@@ -173,7 +173,7 @@ class Page extends API {
 							'slug'  => 'enhanced_measurements',
 							'type'  => 'checkbox',
 							'value' => 'search',
-							'caps'  => [ self::CAP_GOALS, self::CAP_PROPS ],
+							'caps'  => [ self::CAP_GOALS ],
 						],
 						'tagged-events'    => [
 							'label' => esc_html__( 'Custom events', 'plausible-analytics' ),

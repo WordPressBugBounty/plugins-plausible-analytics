@@ -42,22 +42,57 @@ final class Plugin {
 	 * @return void
 	 */
 	public function register_services() {
+
 		if ( is_admin() ) {
+			add_action( 'init', [ $this, 'load_settings' ] );
+			add_action( 'init', [ $this, 'load_provisioning' ] );
+
 			new Admin\Upgrades();
-			new Admin\Settings\Page();
 			new Admin\Filters();
 			new Admin\Actions();
 			new Admin\Module();
-			new Admin\Provisioning();
-			new Admin\Provisioning\Integrations();
 		}
 
-		new Integrations();
+		add_action( 'init', [ $this, 'load_integrations' ] );
 		new Actions();
 		new Ajax();
 		new Compatibility();
 		new Filters();
 		new Proxy();
+	}
+
+	/**
+	 * Load @see Admin\Settings\Page()
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function load_settings() {
+		new Admin\Settings\Page();
+	}
+
+	/**
+	 * Load @see Admin\Provisioning()
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function load_provisioning() {
+		new Admin\Provisioning();
+		new Admin\Provisioning\Integrations();
+	}
+
+	/**
+	 * Load @see Integrations()
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function load_integrations() {
+		new Integrations();
 	}
 
 	/**
