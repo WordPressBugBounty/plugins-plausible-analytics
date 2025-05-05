@@ -43,6 +43,11 @@ class Compatibility {
 			add_filter( 'sgo_javascript_combine_excluded_external_paths', [ $this, 'exclude_plausible_js' ] );
 		}
 
+		// W3 Total Cache
+		if ( defined( 'W3TC_VERSION' ) ) {
+			add_filter( 'w3tc_minify_js_script_tags', [ $this, 'unset_plausible_js' ] );
+		}
+
 		// WPML
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
 			add_filter( 'rest_url', [ $this, 'wpml_compatibility' ], 10, 1 );
@@ -59,6 +64,7 @@ class Compatibility {
 			add_filter( 'rocket_exclude_js', [ $this, 'exclude_plausible_js' ] );
 			add_filter( 'rocket_minify_excluded_external_js', [ $this, 'exclude_plausible_js' ] );
 			add_filter( 'rocket_delay_js_exclusions', [ $this, 'exclude_plausible_inline_js' ] );
+			add_filter( 'rocket_delay_js_exclusions', [ $this, 'exclude_by_proxy_endpoint' ] );
 			add_filter( 'rocket_exclude_defer_js', [ $this, 'exclude_plausible_js_by_relative_url' ] );
 		}
 	}
@@ -110,6 +116,26 @@ class Compatibility {
 	}
 
 	/**
+	 * Remove Plausible.js (or the local file, when proxy is enabled) of the list of JS files to minify.
+	 *
+	 * @filter w3tc_minify_js_script_tags
+	 * @since  2.4.0
+	 *
+	 * @param $script_tags
+	 *
+	 * @return array
+	 * @throws Exception
+	 */
+	public function unset_plausible_js( $script_tags ) {
+		return array_filter(
+			$script_tags,
+			function ( $tag ) {
+				return str_contains( $tag, Helpers::get_js_url( true ) ) === false;
+			}
+		);
+	}
+
+	/**
 	 * Dear WP Rocket/SG Optimizer/Etc., don't minify/combine/delay our external JS, please.
 	 *
 	 * @filter rocket_exclude_js
@@ -122,6 +148,24 @@ class Compatibility {
 	 */
 	public function exclude_plausible_js_by_relative_url( $excluded_js ) {
 		$excluded_js[] = preg_replace( '/http[s]?:\/\/.*?(\/)/', '$1', Helpers::get_js_url( true ) );
+
+		return $excluded_js;
+	}
+
+	/**
+	 * Some optimization plugins (WP Rocket) replace the JS src URL with their own URL, before being able to exclude it.
+	 * So, when the proxy is enabled, exclusion fails. That's why we exclude again by proxy endpoint.
+	 *
+	 * @filter rocket_delay_js_exclusions
+	 * @since  2.4.0
+	 *
+	 * @param $excluded_js
+	 *
+	 * @return mixed
+	 * @throws Exception
+	 */
+	public function exclude_by_proxy_endpoint( $excluded_js ) {
+		$excluded_js[] = Helpers::get_rest_endpoint( false );
 
 		return $excluded_js;
 	}
