@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Plausible Analytics Team <hello@plausible.io>\n"
-"POT-Creation-Date: 2025-05-05 11:41+0000\n"
+"POT-Creation-Date: 2025-05-21 11:10+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/plausible/wordpress/issues/new\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -16,15 +16,15 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/Actions.php:165
+#: src/Actions.php:174
 msgid "View Analytics"
 msgstr ""
 
-#: src/Actions.php:177
+#: src/Actions.php:186
 msgid "View Page Analytics"
 msgstr ""
 
-#: src/Actions.php:192, src/Admin/Filters.php:63, src/Admin/Settings/API.php:461
+#: src/Actions.php:201, src/Admin/Filters.php:63, src/Admin/Settings/API.php:462
 msgid "Settings"
 msgstr ""
 
@@ -48,11 +48,11 @@ msgstr ""
 msgid "No options found to save."
 msgstr ""
 
-#: src/Ajax.php:304
+#: src/Ajax.php:333
 msgid "Settings saved."
 msgstr ""
 
-#: src/Ajax.php:327
+#: src/Ajax.php:356
 msgid "Oops! The Plugin Token you used is invalid. Please <a href=\"%s\" target=\"_blank\">create a new token</a>. <a target=\"_blank\" href=\"%s\">Read more</a>"
 msgstr ""
 
@@ -122,19 +122,23 @@ msgid "404"
 msgstr ""
 
 #: src/Admin/Provisioning.php:89
-msgid "Outbound Link: Click"
+msgid "Cloaked Link: Click"
 msgstr ""
 
 #: src/Admin/Provisioning.php:90
 msgid "File Download"
 msgstr ""
 
-#: src/Admin/Provisioning.php:91
-msgid "WP Search Queries"
+#: src/Admin/Provisioning.php:91, src/Integrations/FormSubmit.php:62, src/Integrations/FormSubmit.php:106
+msgid "WP Form Completions"
 msgstr ""
 
-#: src/Admin/Provisioning.php:92, src/Integrations/FormSubmit.php:62, src/Integrations/FormSubmit.php:106
-msgid "WP Form Completions"
+#: src/Admin/Provisioning.php:92
+msgid "Outbound Link: Click"
+msgstr ""
+
+#: src/Admin/Provisioning.php:93
+msgid "WP Search Queries"
 msgstr ""
 
 #: src/Integrations/EDD.php:36, src/Integrations/WooCommerce.php:39
@@ -193,7 +197,7 @@ msgstr ""
 msgid "Enhanced measurements"
 msgstr ""
 
-#: src/Admin/Settings/API.php:68, src/Admin/Settings/Page.php:263
+#: src/Admin/Settings/API.php:68, src/Admin/Settings/Page.php:291
 msgid "Enable proxy"
 msgstr ""
 
@@ -218,7 +222,7 @@ msgid "Would you like to view your site's stats in your WordPress dashboard?"
 msgstr ""
 
 #: src/Admin/Settings/API.php:92
-msgid "Enable enhanced measurements"
+msgid "Enable enhanced measurements to automatically track actions that visitors take on your site."
 msgstr ""
 
 #: src/Admin/Settings/API.php:93
@@ -233,36 +237,44 @@ msgstr ""
 msgid "<p>Congrats! Your traffic is now being counted without compromising the user experience and privacy of your visitors.</p><p>Note that visits from logged in users aren't tracked. If you want to track visits for certain user roles, then please specify them in the <a href=\"%s\">plugin's settings</a>.</p><p>Need help? <a href=\"%s\" target=\"_blank\">Our documentation</a> is the best place to find most answers right away.</p><p>Still haven't found the answer you're looking for? We're here to help. Please <a href=\"%s\" target=\"_blank\">contact our support</a>.</p>"
 msgstr ""
 
-#: src/Admin/Settings/API.php:194
+#: src/Admin/Settings/API.php:195
 msgid "Plausible Analytics Getting Started Guide"
 msgstr ""
 
-#: src/Admin/Settings/API.php:274
+#: src/Admin/Settings/API.php:275
 msgid "Visit plugin settings"
 msgstr ""
 
-#: src/Admin/Settings/API.php:253
+#: src/Admin/Settings/API.php:254
 msgid "Next"
 msgstr ""
 
-#: src/Admin/Settings/API.php:259
+#: src/Admin/Settings/API.php:260
 msgid "Setup later"
 msgstr ""
 
-#: src/Admin/Settings/API.php:266, src/Admin/Settings/API.php:466
+#: src/Admin/Settings/API.php:267, src/Admin/Settings/API.php:467
 msgid "Community Edition"
 msgstr ""
 
-#: src/Admin/Settings/API.php:524
+#: src/Admin/Settings/API.php:525
 msgid "Getting Started Guide"
 msgstr ""
 
-#: src/Admin/Settings/API.php:531
+#: src/Admin/Settings/API.php:532
 msgid "Documentation"
 msgstr ""
 
-#: src/Admin/Settings/API.php:537
+#: src/Admin/Settings/API.php:538
 msgid "Contact Support"
+msgstr ""
+
+#: src/Admin/Settings/API.php:642, src/Admin/Settings/Page.php:344, src/Admin/Settings/Page.php:416, src/Admin/Settings/Page.php:451
+msgid "Save"
+msgstr ""
+
+#: src/Admin/Settings/API.php:644
+msgid "Add More"
 msgstr ""
 
 #: src/Admin/Settings/Hooks.php:59
@@ -305,7 +317,7 @@ msgstr ""
 msgid "Ensure your domain name matches the one in <a href=\"%s\" target=\"_blank\">your Plausible account</a>, then <a class=\"hover:cursor-pointer underline plausible-create-api-token\">create a Plugin Token</a> (link opens in a new window) and paste it into the 'Plugin Token' field."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:112, src/Admin/Settings/Page.php:386
+#: src/Admin/Settings/Page.php:112, src/Admin/Settings/Page.php:408
 msgid "Domain name"
 msgstr ""
 
@@ -343,158 +355,166 @@ msgid "Authors and categories"
 msgstr ""
 
 #: src/Admin/Settings/Page.php:179
+msgid "Cloaked affiliate links"
+msgstr ""
+
+#: src/Admin/Settings/Page.php:190
+msgid "Enter the (partial) URLs you'd like to track. E.g. enter <strong>/recommends/</strong> if you want to track <code>%s</code>."
+msgstr ""
+
+#: src/Admin/Settings/Page.php:201
 msgid "Ecommerce revenue"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:187
+#: src/Admin/Settings/Page.php:209
 msgid "Form completions"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:195
+#: src/Admin/Settings/Page.php:217
 msgid "Logged-in user status"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:203
+#: src/Admin/Settings/Page.php:225
 msgid "Search queries"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:211
+#: src/Admin/Settings/Page.php:233
+msgid "Advanced options"
+msgstr ""
+
+#: src/Admin/Settings/Page.php:238
 msgid "Custom events"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:219
+#: src/Admin/Settings/Page.php:246
 msgid "Hash-based routing"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:227
+#: src/Admin/Settings/Page.php:254
 msgid "IE compatibility"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:237
+#: src/Admin/Settings/Page.php:266
 msgid "Bypass ad blockers"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:242
+#: src/Admin/Settings/Page.php:271
 msgid "Concerned about ad blockers? You can run the Plausible script as a first-party connection from your domain name to count visitors who use ad blockers. The proxy uses WordPress' API with a randomly generated endpoint, starting with <code>%1$s</code> and %2$s. <a href=\"%3$s\" target=\"_blank\">Learn more &raquo;</a>"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:272
+#: src/Admin/Settings/Page.php:300
 msgid "View your stats in your WordPress dashboard"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:275
+#: src/Admin/Settings/Page.php:303
 msgid "View your site statistics within your WordPress Dashboard."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:282
+#: src/Admin/Settings/Page.php:309
 msgid "View stats in WordPress"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:291
+#: src/Admin/Settings/Page.php:318
 msgid "Exclude specific pages from being tracked"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:296
+#: src/Admin/Settings/Page.php:323
 msgid "Exclude certain pages from being tracked. You can use an asterisk (*) to match patterns in your page URLs."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:303
+#: src/Admin/Settings/Page.php:330
 msgid "See syntax &raquo;"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:308
+#: src/Admin/Settings/Page.php:334
 msgid "Excluded pages"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:312
+#: src/Admin/Settings/Page.php:338
 msgid "E.g."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:318, src/Admin/Settings/Page.php:394, src/Admin/Settings/Page.php:429
-msgid "Save"
-msgstr ""
-
-#: src/Admin/Settings/Page.php:325
+#: src/Admin/Settings/Page.php:351
 msgid "Track analytics for user roles"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:328
+#: src/Admin/Settings/Page.php:354
 msgid "By default, visits from logged in users aren't tracked. If you want to track visits for certain user roles then please specify them below."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:336
+#: src/Admin/Settings/Page.php:361
 msgid "Show stats dashboard to additional user roles"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:339
+#: src/Admin/Settings/Page.php:364
 msgid "By default, the stats dashboard is only available to logged in administrators. If you want the dashboard to be available for other logged in users, then please specify them below."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:347
+#: src/Admin/Settings/Page.php:371
 msgid "Disable menu in toolbar"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:350
+#: src/Admin/Settings/Page.php:374
 msgid "Check this option if you don't want the Plausible Analytics menu item to be added to the toolbar at the top of the screen."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:358
+#: src/Admin/Settings/Page.php:381
 msgid "Disable toolbar menu"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:368
+#: src/Admin/Settings/Page.php:391
 msgid "Plausible Community Edition"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:374
+#: src/Admin/Settings/Page.php:397
 msgid "If you're using Plausible Community Edition on your own infrastructure, enter the domain name where you installed it to enable the integration with your self-hosted instance. Multisites can use the <code>PLAUSIBLE_SELF_HOSTED_DOMAIN</code> constant to define the URL for all subsites at once."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:381
+#: src/Admin/Settings/Page.php:404
 msgid "Learn more about Plausible Community Edition."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:402
+#: src/Admin/Settings/Page.php:424
 msgid "View stats in your WordPress dashboard"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:406
+#: src/Admin/Settings/Page.php:428
 msgid "<a href=\"%s\" target=\"_blank\">Create a secure and private shared link</a> in your Plausible account."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:409
+#: src/Admin/Settings/Page.php:431
 msgid "Paste the shared link in the text box to view your stats in your WordPress dashboard."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:417
+#: src/Admin/Settings/Page.php:439
 msgid "Shared link"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:422
+#: src/Admin/Settings/Page.php:444
 msgid "E.g. %s/share/%s?auth=XXXXXXXXXXXX"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:576, src/Admin/Settings/Page.php:577
+#: src/Admin/Settings/Page.php:598, src/Admin/Settings/Page.php:599
 msgid "Analytics"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:589, src/Admin/Settings/Page.php:590
+#: src/Admin/Settings/Page.php:611, src/Admin/Settings/Page.php:612
 msgid "Plausible Analytics"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:647
+#: src/Admin/Settings/Page.php:669
 msgid "You don't have sufficient privileges to access the analytics dashboard. Please contact administrator of the website to grant you the access."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:725
+#: src/Admin/Settings/Page.php:747
 msgid "Please <a href=\"%s\">click here</a> to enable <strong>View Stats in WordPress</strong>."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:717
+#: src/Admin/Settings/Page.php:739
 msgid "Please enter your <em>Shared Link</em> under <a href=\"%s\">Self-Hosted Settings</a>."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:698
+#: src/Admin/Settings/Page.php:720
 msgid "Plausible Analytics\' statistics couldn\'t be loaded. Please disable your ad blocker."
 msgstr ""
 

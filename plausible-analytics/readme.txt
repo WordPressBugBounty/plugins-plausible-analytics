@@ -5,7 +5,7 @@ Tags: analytics, google analytics, web analytics, stats, privacy
 Requires at least: 5.9
 Tested up to: 6.8
 Requires PHP: 7.2
-Stable tag: 2.3.3
+Stable tag: 2.4.0
 License: Massachusetts Institute of Technology (MIT) license
 License URI: https://opensource.org/licenses/MIT
 
@@ -49,7 +49,7 @@ Plausible is privacy-friendly analytics. All the site measurement is carried out
 
 ### Track events and marketing campaigns
 
-Plausible is useful. Segment your audience by any metric you click on. Answer the important questions about your visitors, content and referral sources. Analyze paid campaigns using UTM parameters. Track scroll depth, site search terms, outbound link clicks, file downloads, form completions, 404 error pages, post authors, post categories and custom taxonomies without manually configuring anything or writing any code.
+Plausible is useful. Segment your audience by any metric you click on. Answer the important questions about your visitors, content and referral sources. Analyze paid campaigns using UTM parameters. Track scroll depth, site search terms, outbound link clicks, cloaked affiliate link clicks, file downloads, form completions, 404 error pages, post authors, post categories and custom taxonomies without manually configuring anything or writing any code.
 
 ### Built-in WooCommerce and Easy Digital Downloads analytics
 
@@ -71,7 +71,8 @@ Plausible is open source analytics. Our source code is available and accessible 
 * Get more accurate stats and count those who use adblockers by running the Plausible script as a first-party connection from your domain name
 * View your Plausible stats directly in your WordPress dashboard (you can grant access to other user roles too)
 * Tracking of admin users is disabled by default (you can also disable tracking of other user roles)
-* Enable WooCommerce or Easy Digital Downloads revenue tracking, file downloads, external link clicks, site search terms, form completions and 404 error pages tracking 
+* Enable WooCommerce or Easy Digital Downloads revenue tracking
+* Enable file downloads, external link clicks, cloaked affiliate link clicks, site search terms, form completions and 404 error pages tracking 
 * Enable automated tracking of post authors, post categories and custom taxonomies for better content analysis
 * Custom events and custom dimensions can be setup using CSS class names directly in the WordPress editor
 * Integrate with Google Search Console so you can see search queries people use to find your site in Google's search results
@@ -154,6 +155,11 @@ Contact us: https://plausible.io/contact
 Please make sure you make a backup of your database before updating any version to ensure that none of your data is lost.
 
 == Changelog ==
+
+= 2.4.0 | May 21st, 2025 =
+* Added: Cloaked Affiliate Link tracking feature.
+* Improved: Custom Events, Hash based routing and IE compatibility are now grouped under a new Advanced Options section.
+* Improved: Enhanced Measurements 404, File Downloads, Outbound Links, Form Completions and Search Queries are now enabled by default on new installs.
 
 = 2.3.3 | May 5th, 2025 =
 * Added: W3 Total Cache compatibility.
