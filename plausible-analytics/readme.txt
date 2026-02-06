@@ -3,13 +3,13 @@ Contributors: plausible, DaanvandenBergh
 Donate link: https://plausible.io/
 Tags: analytics, google analytics, web analytics, stats, privacy
 Requires at least: 5.9
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.2
-Stable tag: 2.4.0
+Stable tag: 2.5.2
 License: Massachusetts Institute of Technology (MIT) license
 License URI: https://opensource.org/licenses/MIT
 
-Plausible Analytics is an easy-to-use, open source, lightweight and privacy-friendly web analytics alternative to Google Analytics.
+Plausible Analytics is a privacy-friendly web analytics plugin for WordPress that is an easy-to-use, lightweight and more accurate  alternative to Google Analytics.
 
 == Description ==
 
@@ -29,7 +29,7 @@ We're completely independent, self-funded, bootstrapped and debt-free. We're not
 
 Google Analytics is frustrating to use, difficult to understand, slow to load and privacy-invasive. That's why we built Plausible Analytics, a simple but powerful, lightweight, open source and privacy-friendly alternative. 
 
-Here's what makes Plausible a great Google Analytics alternative and why over 15,000 paying subscribers trust us with their website and business insights:
+Here's what makes Plausible a great Google Analytics alternative and why over 16,000 paying subscribers trust us with their website and business insights:
 
 ### Smooth transition from Google Analytics
 
@@ -74,7 +74,7 @@ Plausible is open source analytics. Our source code is available and accessible 
 * Enable WooCommerce or Easy Digital Downloads revenue tracking
 * Enable file downloads, external link clicks, cloaked affiliate link clicks, site search terms, form completions and 404 error pages tracking 
 * Enable automated tracking of post authors, post categories and custom taxonomies for better content analysis
-* Custom events and custom dimensions can be setup using CSS class names directly in the WordPress editor
+* Custom events and custom dimensions can be setup using CSS class names directly in the WordPress editor, no JS knowledge needed
 * Integrate with Google Search Console so you can see search queries people use to find your site in Google's search results
 * Import your historical Google Analytics stats
 * Keep an eye on your traffic with weekly and/or monthly email and Slack reports
@@ -123,7 +123,7 @@ Google Analytics is free because Google has built their company and their wealth
 
 With Plausible, you 100% own and control all of your website data. This data is not being shared with or sold to any third-parties. Since we don't make money from targeted advertisement, we must charge a subscription fee.
 
-Revenue from subscriptions is used to pay our rent, further develop Plausible and allow us to commit to Plausible and open source full time.
+Revenue from subscriptions is used to pay our rent, further develop Plausible and allow us to commit to Plausible and open source full time. There's a more elaborate explanation given here: https://plausible.io/paid-analytics-vs-free-ga
 
 = Is there a demo available? = 
 
@@ -155,6 +155,28 @@ Contact us: https://plausible.io/contact
 Please make sure you make a backup of your database before updating any version to ensure that none of your data is lost.
 
 == Changelog ==
+
+= 2.5.2 =
+* Fixed: CE users still using a self-hosted version without Plugins API support would get a critical error after updating to 2.5.1.
+
+= 2.5.1 | February 5th, 2026 =
+* Migrated: this plugin now uses the new tracking code.
+* Improved: the Custom Events option is now on by default.
+* Removed: IE compatibility.
+* Improved: PHP 8.5 compatibility (not fully tested yet)
+
+= 2.5.0 | December 9th, 2025 =
+* Improved: PHP 8.4 compatibility
+* Added: Query Parameters option to Enhanced Measurements
+* Improved: Search Queries now also shows on which page the search was triggered.
+
+= 2.4.2 | December 2nd, 2025 =
+* Fixed: some instances would get an Uncaught Error: call to undefined function get_plugin_data() error.
+
+= 2.4.1 | December 1st, 2025 =
+* Tested with WP 6.9
+* Improved: version meta tag is no longer displayed by default, to clean up HTML.
+* Added: compatibility for TranslatePress.
 
 = 2.4.0 | May 21st, 2025 =
 * Added: Cloaked Affiliate Link tracking feature.

@@ -27,6 +27,9 @@ class Compatibility {
 			add_filter( 'autoptimize_filter_js_exclude', [ $this, 'exclude_plausible_js_as_string' ] );
 		}
 
+		// Cloudflare Rocket Loader
+		add_filter( 'script_loader_tag', [ $this, 'exclude_from_cloudflare_rocket_loader' ], 10, 2 );
+
 		// LiteSpeed Cache
 		if ( defined( 'LSCWP_V' ) ) {
 			add_filter( 'litespeed_optimize_js_excludes', [ $this, 'exclude_plausible_js' ] );
@@ -43,6 +46,11 @@ class Compatibility {
 			add_filter( 'sgo_javascript_combine_excluded_external_paths', [ $this, 'exclude_plausible_js' ] );
 		}
 
+		// TranslatePress
+		if ( defined( 'TRP_PLUGIN_VERSION' ) ) {
+			add_filter( 'rest_url', [ $this, 'multilingual_compatibility' ], 10, 1 );
+		}
+
 		// W3 Total Cache
 		if ( defined( 'W3TC_VERSION' ) ) {
 			add_filter( 'w3tc_minify_js_script_tags', [ $this, 'unset_plausible_js' ] );
@@ -50,7 +58,7 @@ class Compatibility {
 
 		// WPML
 		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-			add_filter( 'rest_url', [ $this, 'wpml_compatibility' ], 10, 1 );
+			add_filter( 'rest_url', [ $this, 'multilingual_compatibility' ], 10, 1 );
 		}
 
 		// WP Optimize
@@ -80,6 +88,34 @@ class Compatibility {
 		$exclude_js .= ', window.plausible, ' . Helpers::get_js_url( true );
 
 		return $exclude_js;
+	}
+
+	/**
+	 * Add Plausible Analytics attributes.
+	 *
+	 * @param string $handle Script handle.
+	 * @param string $tag Script tag.
+	 *
+	 * @return string
+	 * @since  1.0.0
+	 * @access public
+	 *
+	 */
+	public function exclude_from_cloudflare_rocket_loader( $tag, $handle ) {
+		// Bail if it's not our script.
+		if ( 'plausible-analytics' !== $handle ) {
+			return $tag; // @codeCoverageIgnore
+		}
+
+		$settings = Helpers::get_settings();
+
+		/**
+		 * the data-cfasync ensures this script isn't processed by CF Rocket Loader @see https://developers.cloudflare.com/speed/optimization/content/rocket-loader/ignore-javascripts/
+		 */
+		$params = "defer data-cfasync='false'";
+		$params = apply_filters( 'plausible_analytics_script_params', $params );
+
+		return str_replace( ' src', " {$params} src", $tag );
 	}
 
 	/**
@@ -188,15 +224,19 @@ class Compatibility {
 	}
 
 	/**
-	 * WPML overrides the REST API URL to include the language 'subdirectory', which leads to 404s.
-	 * This forces it back to default behavior.
+	 * Multilingual plugins, e.g., TranslatePress and WPML, override the REST API URL to include
+	 * the language 'subdirectory', which leads to 404 errors.
+	 *
+	 * This filter forces it back to default behavior.
+	 *
+	 * @filter rest_url
 	 *
 	 * @param mixed $url
 	 *
 	 * @return string|void
 	 * @throws Exception
 	 */
-	public function wpml_compatibility( $url ) {
+	public function multilingual_compatibility( $url ) {
 		$rest_endpoint = Helpers::get_rest_endpoint( false );
 
 		if ( strpos( $url, $rest_endpoint ) !== false ) {

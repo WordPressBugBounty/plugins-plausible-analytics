@@ -7,7 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInit96603a6f64d93fb039d098aa83de1069
 {
     public static $prefixLengthsPsr4 = array (
-        'P' => 
+        'P' =>
         array (
             'Plausible\\Analytics\\WP\\Client\\' => 30,
             'Plausible\\Analytics\\WP\\' => 23,
@@ -15,34 +15,34 @@ class ComposerStaticInit96603a6f64d93fb039d098aa83de1069
             'Plausible\\Analytics\\Tests\\Integration\\' => 38,
             'Plausible\\Analytics\\Tests\\' => 26,
         ),
-        'C' => 
+        'C' =>
         array (
             'Composer\\Installers\\' => 20,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Plausible\\Analytics\\WP\\Client\\' => 
+        'Plausible\\Analytics\\WP\\Client\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Client/lib',
         ),
-        'Plausible\\Analytics\\WP\\' => 
+        'Plausible\\Analytics\\WP\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Plausible\\Analytics\\Tests\\Unit\\' => 
+        'Plausible\\Analytics\\Tests\\Unit\\' =>
         array (
             0 => __DIR__ . '/../..' . '/tests/unit',
         ),
-        'Plausible\\Analytics\\Tests\\Integration\\' => 
+        'Plausible\\Analytics\\Tests\\Integration\\' =>
         array (
             0 => __DIR__ . '/../..' . '/tests/integration',
         ),
-        'Plausible\\Analytics\\Tests\\' => 
+        'Plausible\\Analytics\\Tests\\' =>
         array (
             0 => __DIR__ . '/../..' . '/tests',
         ),
-        'Composer\\Installers\\' => 
+        'Composer\\Installers\\' =>
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
         ),
