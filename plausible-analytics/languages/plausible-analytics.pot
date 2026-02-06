@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Plausible Analytics Team <hello@plausible.io>\n"
-"POT-Creation-Date: 2026-02-05 18:00+0000\n"
+"POT-Creation-Date: 2026-02-06 11:46+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/plausible/wordpress/issues/new\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -56,31 +56,31 @@ msgstr ""
 msgid "Oops! The Plugin Token you used is invalid. Please <a href=\"%s\" target=\"_blank\">create a new token</a>. <a target=\"_blank\" href=\"%s\">Read more</a>"
 msgstr ""
 
-#: src/Client.php:227
+#: src/Client.php:232
 msgid "Something went wrong while updating tracker script configuration: %s"
 msgstr ""
 
-#: src/Client.php:252
+#: src/Client.php:257
 msgid "Something went wrong, try again later."
 msgstr ""
 
-#: src/Client.php:298
+#: src/Client.php:303
 msgid "Something went wrong while creating Shared Link: %s"
 msgstr ""
 
-#: src/Client.php:336
+#: src/Client.php:341
 msgid "Something went wrong while creating Custom Event Goal: %s"
 msgstr ""
 
-#: src/Client.php:353
+#: src/Client.php:358
 msgid "Something went wrong while creating Funnel: %s"
 msgstr ""
 
-#: src/Client.php:370
+#: src/Client.php:375
 msgid "Something went wrong while deleting a Custom Event Goal: %s"
 msgstr ""
 
-#: src/Client.php:393
+#: src/Client.php:398
 msgid "Something went wrong while enabling Pageview Properties: %s"
 msgstr ""
 
@@ -139,6 +139,10 @@ msgstr ""
 
 #: src/Admin/Provisioning.php:95
 msgid "WP Search Queries"
+msgstr ""
+
+#: src/Admin/Upgrades.php:383
+msgid "An API token for Plausible Analytics is required. Please create one from the <a href=\"%s\">Settings screen</a> and upgrade Plausible CE if necessary."
 msgstr ""
 
 #: src/Integrations/EDD.php:37, src/Integrations/WooCommerce.php:40
