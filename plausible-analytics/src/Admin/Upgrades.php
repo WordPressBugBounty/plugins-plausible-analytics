@@ -98,6 +98,10 @@ class Upgrades {
 			$this->upgrade_to_253();
 		}
 
+		if ( version_compare( $plausible_analytics_version, '2.5.4', '<' ) ) {
+			$this->upgrade_to_254();
+		}
+
 		// Add required upgrade routines for future versions here.
 	}
 
@@ -367,7 +371,41 @@ class Upgrades {
 			return;
 		}
 
+		add_action( 'admin_notices', [ $this, 'show_ce_api_token_notice' ] );
+	}
+
+	/**
+	 * Show an admin-wide notice to CE users that haven't entered an API token yet.
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_254() {
+		$self_hosted_domain = Helpers::get_settings()['self_hosted_domain'];
+		$api_token          = Helpers::get_settings()['api_token'];
+
+		// This user apparently hasn't entered an API token yet.
+		if ( ! empty( $api_token ) && empty ( $self_hosted_domain ) ) {
+			update_option( 'plausible_analytics_version', '2.5.4' );
+
+			return;
+		}
+
 		add_action( 'admin_notices', [ $this, 'show_api_token_notice' ] );
+	}
+
+	/**
+	 * Display a notice to CE users that haven't entered an API token yet.
+	 *
+	 * @return void
+	 */
+	public function show_ce_api_token_notice() {
+		$url = admin_url( 'options-general.php?page=plausible_analytics' );
+
+		?>
+		<div class="notice notice-warning">
+			<p><?php echo sprintf( __( 'A plugin token for Plausible is required. Please create one from the <a href="%s">Settings screen</a> and upgrade Plausible CE if necessary.', 'plausible-analytics' ), $url ); ?></p>
+		</div>
+		<?php
 	}
 
 	/**
@@ -380,9 +418,7 @@ class Upgrades {
 
 		?>
 		<div class="notice notice-warning">
-			<p><?php echo sprintf( __( 'An API token for Plausible Analytics is required. Please create one from the <a href="%s">Settings screen</a> and upgrade Plausible CE if necessary.',
-						'plausible-analytics' )
-					, $url ); ?></p>
+			<p><?php echo sprintf( __( 'Almost there! Stats tracking requires a Plausible plugin token. Create one on the <a href="%s">Settings screen</a>, and press Connect to complete setup.', 'plausible-analytics' ), $url ); ?></p>
 		</div>
 		<?php
 	}
