@@ -375,7 +375,7 @@ class Upgrades {
 	}
 
 	/**
-	 * Show an admin-wide notice to CE users that haven't entered an API token yet.
+	 * Show an admin-wide notice to Cloud users that haven't entered an API token yet.
 	 *
 	 * @return void
 	 */
@@ -384,7 +384,7 @@ class Upgrades {
 		$api_token          = Helpers::get_settings()['api_token'];
 
 		// This user apparently hasn't entered an API token yet.
-		if ( ! empty( $api_token ) && empty ( $self_hosted_domain ) ) {
+		if ( empty( $api_token ) && empty ( $self_hosted_domain ) ) {
 			update_option( 'plausible_analytics_version', '2.5.4' );
 
 			return;
