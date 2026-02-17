@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Plausible Analytics Team <hello@plausible.io>\n"
-"POT-Creation-Date: 2026-02-11 15:22+0000\n"
+"POT-Creation-Date: 2026-02-17 10:55+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/plausible/wordpress/issues/new\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -32,27 +32,27 @@ msgstr ""
 msgid "Not allowed"
 msgstr ""
 
-#: src/Ajax.php:161, src/Ajax.php:185, src/Ajax.php:275
+#: src/Ajax.php:176, src/Ajax.php:200, src/Ajax.php:290
 msgid "Not allowed."
 msgstr ""
 
-#: src/Ajax.php:219
+#: src/Ajax.php:234
 msgid "enabled"
 msgstr ""
 
-#: src/Ajax.php:219
+#: src/Ajax.php:234
 msgid "disabled"
 msgstr ""
 
-#: src/Ajax.php:283
+#: src/Ajax.php:298
 msgid "No options found to save."
 msgstr ""
 
-#: src/Ajax.php:338
+#: src/Ajax.php:361
 msgid "Settings saved."
 msgstr ""
 
-#: src/Ajax.php:361
+#: src/Ajax.php:386
 msgid "Oops! The Plugin Token you used is invalid. Please <a href=\"%s\" target=\"_blank\">create a new token</a>. <a target=\"_blank\" href=\"%s\">Read more</a>"
 msgstr ""
 
@@ -109,15 +109,15 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: src/Admin/Module.php:97
+#: src/Admin/Module.php:100
 msgid "The proxy is enabled, but the proxy's speed module failed to install. Try <a href=\"%s\" target=\"_blank\">installing it manually</a>."
 msgstr ""
 
-#: src/Admin/Module.php:208
+#: src/Admin/Module.php:214
 msgid "Please check that your proxy is functioning correctly. If you encounter any issues with tracking, <a href=\"%s\" target=\"_blank\">click here</a> for a list of potential solutions"
 msgstr ""
 
-#: src/Admin/Module.php:224
+#: src/Admin/Module.php:230
 msgid "Plausible's proxy couldn't be enabled, because the WordPress API is inaccessible. This might be due to a conflicting setting in a (security) plugin or server firewall. Make sure you whitelist requests to the Proxy's endpoint: <code>%1$s</code>. <a href=\"%2$s\" target=\"_blank\">Contact support</a> if you need help locating the issue."
 msgstr ""
 
@@ -141,11 +141,11 @@ msgstr ""
 msgid "WP Search Queries"
 msgstr ""
 
-#: src/Admin/Upgrades.php:406
+#: src/Admin/Upgrades.php:390
 msgid "A plugin token for Plausible is required. Please create one from the <a href=\"%s\">Settings screen</a> and upgrade Plausible CE if necessary."
 msgstr ""
 
-#: src/Admin/Upgrades.php:421
+#: src/Admin/Upgrades.php:405
 msgid "Almost there! Stats tracking requires a Plausible plugin token. Create one on the <a href=\"%s\">Settings screen</a>, and press Connect to complete setup."
 msgstr ""
 
