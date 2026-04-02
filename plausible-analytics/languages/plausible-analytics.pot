@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Plausible Analytics Team <hello@plausible.io>\n"
-"POT-Creation-Date: 2026-02-17 10:55+0000\n"
+"POT-Creation-Date: 2026-04-02 10:57+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/plausible/wordpress/issues/new\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -28,59 +28,63 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/Ajax.php:80
+#: src/Ajax.php:81
 msgid "Not allowed"
 msgstr ""
 
-#: src/Ajax.php:176, src/Ajax.php:200, src/Ajax.php:290
+#: src/Ajax.php:177, src/Ajax.php:201, src/Ajax.php:284, src/Ajax.php:332
 msgid "Not allowed."
 msgstr ""
 
-#: src/Ajax.php:234
+#: src/Ajax.php:235
 msgid "enabled"
 msgstr ""
 
-#: src/Ajax.php:234
+#: src/Ajax.php:235
 msgid "disabled"
 msgstr ""
 
-#: src/Ajax.php:298
-msgid "No options found to save."
+#: src/Ajax.php:290
+msgid "No options found."
 msgstr ""
 
-#: src/Ajax.php:361
+#: src/Ajax.php:315, src/Ajax.php:403
 msgid "Settings saved."
 msgstr ""
 
-#: src/Ajax.php:386
+#: src/Ajax.php:340
+msgid "No options found to save."
+msgstr ""
+
+#: src/Ajax.php:428
 msgid "Oops! The Plugin Token you used is invalid. Please <a href=\"%s\" target=\"_blank\">create a new token</a>. <a target=\"_blank\" href=\"%s\">Read more</a>"
 msgstr ""
 
-#: src/Client.php:232
+#: src/Client.php:235
 msgid "Something went wrong while updating tracker script configuration: %s"
 msgstr ""
 
-#: src/Client.php:257
+#: src/Client.php:260
 msgid "Something went wrong, try again later."
 msgstr ""
 
-#: src/Client.php:303
+#: src/Client.php:306
 msgid "Something went wrong while creating Shared Link: %s"
 msgstr ""
 
-#: src/Client.php:341
+#: src/Client.php:344
 msgid "Something went wrong while creating Custom Event Goal: %s"
 msgstr ""
 
-#: src/Client.php:358
+#: src/Client.php:361
 msgid "Something went wrong while creating Funnel: %s"
 msgstr ""
 
-#: src/Client.php:375
+#: src/Client.php:378
 msgid "Something went wrong while deleting a Custom Event Goal: %s"
 msgstr ""
 
-#: src/Client.php:398
+#: src/Client.php:401
 msgid "Something went wrong while enabling Pageview Properties: %s"
 msgstr ""
 
@@ -214,7 +218,7 @@ msgid "Success!"
 msgstr ""
 
 #: src/Admin/Settings/API.php:73
-msgid "<p><a href=\"%s\" target=\"_blank\">Plausible Analytics</a> is an easy to use, open source, lightweight (< 1 KB) and privacy-friendly alternative to Google Analytics. We're super excited to have you on board!</p><p>To use our plugin, you need to <a href=\"%s\" target=\"_blank\">register an account</a>. To explore the product, we offer you a free 30-day trial. No credit card is required to sign up for the trial.</p><p>Already have an account? Please do follow the following steps to get the most out of your Plausible experience.</p>"
+msgid "<p><a href=\"%s\" target=\"_blank\">Plausible Analytics</a> is an easy to use, open source, lightweight and privacy-friendly alternative to Google Analytics. We're super excited to have you on board!</p><p>To use our plugin, you need to <a href=\"%s\" target=\"_blank\">register an account</a>. To explore the product, we offer you a free 30-day trial. No credit card is required to sign up for the trial.</p><p>Already have an account? Please do follow the following steps to get the most out of your Plausible experience.</p>"
 msgstr ""
 
 #: src/Admin/Settings/API.php:80
@@ -277,11 +281,15 @@ msgstr ""
 msgid "Contact Support"
 msgstr ""
 
-#: src/Admin/Settings/API.php:642, src/Admin/Settings/Page.php:340, src/Admin/Settings/Page.php:412, src/Admin/Settings/Page.php:447
+#: src/Admin/Settings/API.php:631
+msgid "Select all"
+msgstr ""
+
+#: src/Admin/Settings/API.php:690, src/Admin/Settings/Page.php:340, src/Admin/Settings/Page.php:414, src/Admin/Settings/Page.php:449
 msgid "Save"
 msgstr ""
 
-#: src/Admin/Settings/API.php:644
+#: src/Admin/Settings/API.php:693
 msgid "Add More"
 msgstr ""
 
@@ -325,7 +333,7 @@ msgstr ""
 msgid "Ensure your domain name matches the one in <a href=\"%s\" target=\"_blank\">your Plausible account</a>, then <a class=\"hover:cursor-pointer underline plausible-create-api-token\">create a Plugin Token</a> (link opens in a new window) and paste it into the 'Plugin Token' field."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:106, src/Admin/Settings/Page.php:404
+#: src/Admin/Settings/Page.php:106, src/Admin/Settings/Page.php:406
 msgid "Domain name"
 msgstr ""
 
@@ -446,79 +454,79 @@ msgstr ""
 msgid "By default, visits from logged in users aren't tracked. If you want to track visits for certain user roles then please specify them below."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:357
+#: src/Admin/Settings/Page.php:358
 msgid "Show stats dashboard to additional user roles"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:360
+#: src/Admin/Settings/Page.php:361
 msgid "By default, the stats dashboard is only available to logged in administrators. If you want the dashboard to be available for other logged in users, then please specify them below."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:367
+#: src/Admin/Settings/Page.php:369
 msgid "Disable menu in toolbar"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:370
+#: src/Admin/Settings/Page.php:372
 msgid "Check this option if you don't want the Plausible Analytics menu item to be added to the toolbar at the top of the screen."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:377
+#: src/Admin/Settings/Page.php:379
 msgid "Disable toolbar menu"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:387
+#: src/Admin/Settings/Page.php:389
 msgid "Plausible Community Edition"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:393
+#: src/Admin/Settings/Page.php:395
 msgid "If you're using Plausible Community Edition on your own infrastructure, enter the domain name where you installed it to enable the integration with your self-hosted instance. Multisites can use the <code>PLAUSIBLE_SELF_HOSTED_DOMAIN</code> constant to define the URL for all subsites at once."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:400
+#: src/Admin/Settings/Page.php:402
 msgid "Learn more about Plausible Community Edition."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:420
+#: src/Admin/Settings/Page.php:422
 msgid "View stats in your WordPress dashboard"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:424
+#: src/Admin/Settings/Page.php:426
 msgid "<a href=\"%s\" target=\"_blank\">Create a secure and private shared link</a> in your Plausible account."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:427
+#: src/Admin/Settings/Page.php:429
 msgid "Paste the shared link in the text box to view your stats in your WordPress dashboard."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:435
+#: src/Admin/Settings/Page.php:437
 msgid "Shared link"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:440
+#: src/Admin/Settings/Page.php:442
 msgid "E.g. %s/share/%s?auth=XXXXXXXXXXXX"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:594, src/Admin/Settings/Page.php:595
+#: src/Admin/Settings/Page.php:596, src/Admin/Settings/Page.php:597
 msgid "Analytics"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:607, src/Admin/Settings/Page.php:608
+#: src/Admin/Settings/Page.php:609, src/Admin/Settings/Page.php:610
 msgid "Plausible Analytics"
 msgstr ""
 
-#: src/Admin/Settings/Page.php:665
+#: src/Admin/Settings/Page.php:667
 msgid "You don't have sufficient privileges to access the analytics dashboard. Please contact administrator of the website to grant you the access."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:743
+#: src/Admin/Settings/Page.php:745
 msgid "Please <a href=\"%s\">click here</a> to enable <strong>View Stats in WordPress</strong>."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:735
+#: src/Admin/Settings/Page.php:737
 msgid "Please enter your <em>Shared Link</em> under <a href=\"%s\">Self-Hosted Settings</a>."
 msgstr ""
 
-#: src/Admin/Settings/Page.php:716
+#: src/Admin/Settings/Page.php:718
 msgid "Plausible Analytics\' statistics couldn\'t be loaded. Please disable your ad blocker."
 msgstr ""
 
