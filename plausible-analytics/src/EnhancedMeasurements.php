@@ -3,7 +3,7 @@
 namespace Plausible\Analytics\WP;
 
 /**
- * This class behaves like an enum, while we can't really support yet, since WP hasn't dropped support yet for PHP 8.0 and lower.
+ * This class behaves like an enum, which we can't really support until WP drops support for PHP 8.0 and lower.
  *
  * @codeCoverageIgnore
  */
@@ -14,6 +14,7 @@ final class EnhancedMeasurements {
 
 	const OUTBOUND_LINKS = 'outbound-links';
 
+	/** @var string Legacy since v2.6.0 because it moved to its own settings section. */
 	const CLOAKED_AFFILIATE_LINKS = 'affiliate-links';
 
 	const PAGEVIEW_PROPS = 'pageview-props';
@@ -24,6 +25,7 @@ final class EnhancedMeasurements {
 
 	const LOGGED_IN_USER_STATUS = 'user-logged-in';
 
+	/** @var string Legacy since v2.6.0 because it moved to its own settings section. */
 	const QUERY_PARAMS = 'query-params';
 
 	const SEARCH_QUERIES = 'search';
@@ -52,8 +54,8 @@ final class EnhancedMeasurements {
 	 *
 	 * @TODO: Refactor $name to enum (introduced in PHP 8.1) when WordPress drops support for PHP 8.0 and lower.
 	 *
-	 * @param string $name Name of the option to check, valid values are defined in @var self::AVAILABLE_OPTIONS
-	 * @param array $enhanced_measurements Allows checking against a different set of options.
+	 * @param string $name                  Name of the option to check, valid values are defined in @var self::AVAILABLE_OPTIONS
+	 * @param array  $enhanced_measurements Allows checking against a different set of options.
 	 *
 	 * @return bool
 	 */
@@ -61,7 +63,9 @@ final class EnhancedMeasurements {
 		self::is_valid( $name );
 
 		if ( empty( $enhanced_measurements ) ) {
-			$enhanced_measurements = Helpers::get_settings()['enhanced_measurements'];
+			$settings = Helpers::get_settings();
+
+			$enhanced_measurements = $settings['enhanced_measurements'] ?? [];
 		}
 
 		if ( ! is_array( $enhanced_measurements ) ) {

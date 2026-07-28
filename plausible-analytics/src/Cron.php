@@ -54,14 +54,35 @@ class Cron {
 			return false;
 		}
 
-		$remote = Helpers::get_js_url();
-		$local  = Helpers::get_js_path();
+		$settings = Helpers::get_settings();
+		$tokens   = $settings['api_token'];
+		$success  = true;
 
-		if ( ! $remote || ! $local ) {
-			return false;
+		foreach ( $tokens as $key => $token ) {
+			if ( empty( $token ) ) {
+				continue;
+			}
+
+			// Force the language domain key for this iteration so get_filename() / get_api_token() resolve correctly.
+			$force_key = function () use ( $key ) {
+				return $key;
+			};
+
+			add_filter( 'plausible_analytics_current_language_domain_key', $force_key );
+
+			$remote = Helpers::get_js_url();
+			$local  = Helpers::get_js_path();
+
+			if ( ! $remote || ! $local ) {
+				$success = false;
+			} elseif ( ! $this->download_file( $remote, $local ) ) {
+				$success = false;
+			}
+
+			remove_filter( 'plausible_analytics_current_language_domain_key', $force_key );
 		}
 
-		return $this->download_file( $remote, $local );
+		return $success;
 	}
 
 	/**
@@ -90,7 +111,7 @@ class Cron {
 		 * Some servers don't do a full overwrite if file already exists, so we delete it first.
 		 */
 		if ( file_exists( $local_file ) ) {
-			unlink( $local_file );
+			wp_delete_file( $local_file );
 		}
 
 		$write = file_put_contents( $local_file, wp_remote_retrieve_body( $file_contents ) );

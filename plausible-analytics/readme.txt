@@ -5,7 +5,7 @@ Tags: analytics, privacy, google analytics alternative, woocommerce analytics, s
 Requires at least: 5.9
 Tested up to: 7.0
 Requires PHP: 7.2
-Stable tag: 2.5.8
+Stable tag: 2.6.0
 License: Massachusetts Institute of Technology (MIT) license
 License URI: https://opensource.org/licenses/MIT
 
@@ -126,6 +126,7 @@ Plausible fits naturally into how WordPress sites are built and managed:
 
 - Works with any WordPress theme
 - Compatible with caching and performance plugins
+- Works with multilingual sites built with WPML, with each language domain on its own dashboard
 - No need to edit theme files or use tag managers
 - Simple setup with no coding required
 - View your stats directly in your WordPress dashboard
@@ -276,6 +277,10 @@ Contact us: https://plausible.io/contact
 Please make sure you make a backup of your database before updating any version to ensure that none of your data is lost.
 
 == Changelog ==
+
+= 2.6.0 =
+* Added: WPML "domain per language" compatibility.
+* Improved: Cloaked Affiliate Links and Query Params now have their own settings sections. Enhanced Measurements are now displayed in two columns.
 
 = 2.5.8 =
 * Fixed: only load author/category pageview props on posts.
