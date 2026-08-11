@@ -101,7 +101,11 @@ class AdminBar {
 
 				$args[] = [
 					'id'     => "view-analytics-$key",
-					'title'  => sprintf( esc_html__( 'View analytics for %s', 'plausible-analytics' ), $language_domain ),
+					/* translators: %s: language domain. */
+					'title' => sprintf(
+						esc_html__( 'View analytics for %s', 'plausible-analytics' ),
+						$language_domain
+					),
 					'href'   => $href,
 					'parent' => 'plausible-analytics',
 				];
@@ -115,7 +119,7 @@ class AdminBar {
 
 				$args[] = [
 					'id'     => 'view-page-analytics',
-					'title'  => esc_html__( 'View Page Analytics', 'plausible-analytics' ),
+					'title'  => esc_html__( 'View page analytics', 'plausible-analytics' ),
 					'href'   => add_query_arg(
 						'page-url',
 						is_home() ? '' : $uri,

@@ -5,7 +5,7 @@ Tags: analytics, privacy, google analytics alternative, woocommerce analytics, s
 Requires at least: 5.9
 Tested up to: 7.0
 Requires PHP: 7.2
-Stable tag: 2.6.0
+Stable tag: 2.6.1
 License: Massachusetts Institute of Technology (MIT) license
 License URI: https://opensource.org/licenses/MIT
 
@@ -278,9 +278,15 @@ Please make sure you make a backup of your database before updating any version 
 
 == Changelog ==
 
+= 2.6.1 =
+* Added: info icons linking to the documentation for Cloaked Affiliate Links, Query Parameters, View Your Stats in Your WordPress Dashboard, Track Analytics for User Roles, Show Stats Dashboard to 
+Additional User Roles and Disable Menu in Toolbar.
+* Fixed: the Getting Started Guide's Next button would stay disabled after entering (or pasting) a Plugin Token.
+
 = 2.6.0 =
 * Added: WPML "domain per language" compatibility.
 * Improved: Cloaked Affiliate Links and Query Params now have their own settings sections. Enhanced Measurements are now displayed in two columns.
+* Fixed: if Permalinks > Custom Base was previously modified with WooCommerce enabled, the view-product goal would wrongfully get a second leading slash.
 
 = 2.5.8 =
 * Fixed: only load author/category pageview props on posts.
