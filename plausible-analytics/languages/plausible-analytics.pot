@@ -7,7 +7,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Plausible Analytics Team <hello@plausible.io>\n"
-"POT-Creation-Date: 2026-08-11 09:06+0000\n"
+"POT-Creation-Date: 2026-09-30 13:43+0000\n"
 "Report-Msgid-Bugs-To: https://github.com/plausible/wordpress/issues/new\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -67,36 +67,36 @@ msgid "Please enter your plugin token to start using Plausible Analytics."
 msgstr ""
 
 #. translators: %s: Error message.
-#: src/Client.php:69
+#: src/Client.php:75
 msgid "Something went wrong while creating Funnel: %s"
 msgstr ""
 
-#: src/Client.php:90
+#: src/Client.php:96
 msgid "Something went wrong, try again later."
 msgstr ""
 
 #. translators: %s: Error message.
-#: src/Client.php:221
+#: src/Client.php:227
 msgid "Something went wrong while creating Custom Event Goal: %s"
 msgstr ""
 
 #. translators: %s: Error message.
-#: src/Client.php:239
+#: src/Client.php:317
 msgid "Something went wrong while creating Shared Link: %s"
 msgstr ""
 
 #. translators: %s: Error message.
-#: src/Client.php:278
+#: src/Client.php:360
 msgid "Something went wrong while deleting a Custom Event Goal: %s"
 msgstr ""
 
 #. translators: %s: Error message.
-#: src/Client.php:302
+#: src/Client.php:388
 msgid "Something went wrong while enabling Pageview Properties: %s"
 msgstr ""
 
 #. translators: %s: Error message.
-#: src/Client.php:373
+#: src/Client.php:459
 msgid "Something went wrong while updating tracker script configuration: %s"
 msgstr ""
 
@@ -104,7 +104,7 @@ msgstr ""
 msgid "cURL is not enabled on this server, which means API provisioning will not work. Please contact your hosting provider to enable the cURL module or <code>allow_url_fopen</code>."
 msgstr ""
 
-#: src/InitOptions.php:180
+#: src/InitOptions.php:183
 msgctxt "Value when user is not logged in."
 msgid "no"
 msgstr ""
@@ -168,71 +168,14 @@ msgid ""
 "For more details, see Plausible's data policy: %s"
 msgstr ""
 
-#: src/Admin/Provisioning.php:92
-msgid "404"
-msgstr ""
-
-#: src/Admin/Provisioning.php:93
-msgid "Cloaked Link: Click"
-msgstr ""
-
-#: src/Admin/Provisioning.php:94, src/Integrations/FormSubmit.php:68, src/Integrations/FormSubmit.php:112
-msgid "WP Form Completions"
-msgstr ""
-
-#: src/Admin/Provisioning.php:95
-msgid "WP Query Parameters"
-msgstr ""
-
-#: src/Admin/Provisioning.php:96
-msgid "WP Search Queries"
-msgstr ""
-
 #. translators: %s: URL to Plausible Analytics settings page.
-#: src/Admin/Upgrades.php:443
+#: src/Admin/Upgrades.php:509
 msgid "A plugin token for Plausible is required. Please create one from the <a href=\"%s\">Settings screen</a> and upgrade Plausible CE if necessary."
 msgstr ""
 
 #. translators: %s: URL to Plausible Analytics settings page.
-#: src/Admin/Upgrades.php:461
+#: src/Admin/Upgrades.php:527
 msgid "Almost there! Stats tracking requires a Plausible plugin token. Create one on the <a href=\"%s\">Settings screen</a>, and press Connect to complete setup."
-msgstr ""
-
-#. translators: %s: Product page URI pattern.
-#: src/Integrations/EDD.php:38, src/Integrations/WooCommerce.php:41
-msgid "Visit %s*"
-msgstr ""
-
-#: src/Integrations/EDD.php:39
-msgid "EDD Add to Cart"
-msgstr ""
-
-#: src/Integrations/EDD.php:40
-msgid "EDD Remove from Cart"
-msgstr ""
-
-#: src/Integrations/EDD.php:41
-msgid "EDD Start Checkout"
-msgstr ""
-
-#: src/Integrations/EDD.php:42
-msgid "EDD Complete Purchase"
-msgstr ""
-
-#: src/Integrations/WooCommerce.php:42
-msgid "Woo Add to Cart"
-msgstr ""
-
-#: src/Integrations/WooCommerce.php:43
-msgid "Woo Remove from Cart"
-msgstr ""
-
-#: src/Integrations/WooCommerce.php:44
-msgid "Woo Start Checkout"
-msgstr ""
-
-#: src/Integrations/WooCommerce.php:45
-msgid "Woo Complete Purchase"
 msgstr ""
 
 #. translators: %s: Label of the option/section this link belongs to.
@@ -600,12 +543,4 @@ msgstr ""
 
 #: src/Admin/Settings/Page.php:716
 msgid "Plausible Analytics\' statistics couldn\'t be loaded. Please disable your ad blocker."
-msgstr ""
-
-#: src/Admin/Provisioning/Integrations/EDD.php:61
-msgid "EDD Purchase Funnel"
-msgstr ""
-
-#: src/Admin/Provisioning/Integrations/WooCommerce.php:62
-msgid "Woo Purchase Funnel"
 msgstr ""

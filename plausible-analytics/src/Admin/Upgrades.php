@@ -106,6 +106,10 @@ class Upgrades {
 			$this->upgrade_to_260();
 		}
 
+		if ( version_compare( $plausible_analytics_version, '2.6.2', '<' ) ) {
+			$this->upgrade_to_262();
+		}
+
 		// Add required upgrade routines for future versions here.
 	}
 
@@ -425,6 +429,68 @@ class Upgrades {
 		Helpers::update_setting( 'enhanced_measurements', $enhanced_measurements );
 
 		update_option( 'plausible_analytics_version', '2.6.0' );
+	}
+
+	/**
+	 * After updating to 2.6.2, (re)create the goals, the Custom Properties and the integration funnels, so existing
+	 * installs pick them up without having to save their settings first:
+	 *
+	 * - Goal and funnel names are no longer translated (@see https://github.com/plausible/wordpress/issues/326). Sites
+	 *   whose goals were created under translated names (e.g. French, since September 2026) now send their events under
+	 *   the English names, so those goals, including the Revenue goal, must exist.
+	 * - The currency Custom Property applies to every WooCommerce/EDD install with Ecommerce Revenue enabled.
+	 * - When a multilingual plugin (WPML, with or without WooCommerce Multilingual & Multicurrency, or TranslatePress)
+	 *   is active, the view-product goals are localized per language (e.g. /es/producto*).
+	 *
+	 * Goals and funnels are created with get-or-create requests, so existing ones are left unchanged.
+	 *
+	 * This runs on init (@see Upgrades::__construct()), so the multilingual plugin's languages are available: WPML loads
+	 * them on plugins_loaded and TranslatePress stores them in an option. When there are none (e.g. WPML's setup hasn't
+	 * been completed yet), the funnels are skipped — they're recreated on the next settings save anyway
+	 * (@see Provisioning\Integrations\WooCommerce::init()) — so the upgrade always completes in a single pass.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore because all we'd be doing is testing the Plugins API.
+	 */
+	public function upgrade_to_262() {
+		$provisioning = new Provisioning();
+		$settings     = Helpers::get_settings();
+
+		/**
+		 * (Re)create the goals of the enabled Enhanced Measurements under their (untranslated) names. Bails when no Plugin
+		 * Token is entered yet; the goals are created as soon as one is.
+		 *
+		 * @see Provisioning::maybe_provision_on_connect()
+		 */
+		$provisioning->maybe_create_goals( [], $settings );
+
+		$is_ecommerce = \Plausible\Analytics\WP\Integrations::is_wc_active() || \Plausible\Analytics\WP\Integrations::is_edd_active();
+
+		if ( $is_ecommerce && EnhancedMeasurements::is_enabled( EnhancedMeasurements::ECOMMERCE_REVENUE ) ) {
+			// The currency Custom Property (@see Provisioning::CUSTOM_PROPERTIES) applies to every ecommerce install.
+			$provisioning->maybe_create_custom_properties( [], $settings );
+
+			/**
+			 * (Re)create the funnels and their goals. When a multilingual plugin is active but doesn't serve any languages
+			 * yet (e.g. WPML's setup hasn't been completed), skip them rather than provisioning the default language's
+			 * path only; they're (re)created with the right paths on the next settings save.
+			 *
+			 * @see Provisioning\Integrations\WooCommerce::init() Both funnels are (re)created on
+			 *      update_option_plausible_analytics_settings, i.e. when the Plugin Token is saved.
+			 * @see Provisioning\Integrations\EDD::init()
+			 */
+			if ( ! Helpers::get_multilang_plugin() || ! empty( Helpers::get_active_languages() ) ) {
+				$integrations = new Integrations( $provisioning );
+
+				( new Provisioning\Integrations\WooCommerce( $integrations ) )->maybe_create_woocommerce_funnel( [], $settings );
+				( new Provisioning\Integrations\EDD( $integrations ) )->maybe_create_edd_funnel( [], $settings );
+			}
+		}
+
+		update_option( 'plausible_analytics_version', '2.6.2' );
 	}
 
 	/**

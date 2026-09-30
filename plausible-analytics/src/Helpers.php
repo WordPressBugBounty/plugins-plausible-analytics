@@ -16,6 +16,95 @@ use Exception;
  */
 class Helpers {
 	/**
+	 * Supported multilingual plugins, as returned by @see Helpers::get_multilang_plugin().
+	 */
+	const MULTILANG_PLUGIN_WPML = 'wpml';
+
+	const MULTILANG_PLUGIN_TRANSLATEPRESS = 'translatepress';
+
+	/**
+	 * Returns the language codes of all languages the active multilingual plugin serves to the public.
+	 *
+	 * Languages that aren't public yet (WPML's hidden languages, TranslatePress' unpublished languages) are left out,
+	 * regardless of who's making the request: WPML only lists hidden languages to users who opted to see them, which
+	 * would make the result depend on whether provisioning runs in an admin's or a visitor's request.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @return array Empty when no supported multilingual plugin is active.
+	 *
+	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
+	 */
+	public static function get_active_languages() {
+		$languages = [];
+
+		switch ( static::get_multilang_plugin() ) {
+			case static::MULTILANG_PLUGIN_WPML:
+				$active = apply_filters( 'wpml_active_languages', null, [ 'skip_missing' => 0 ] );
+
+				if ( is_array( $active ) ) {
+					$hidden    = (array) apply_filters( 'wpml_setting', [], 'hidden_languages' );
+					$languages = array_diff( array_keys( $active ), $hidden );
+				}
+				break;
+
+			case static::MULTILANG_PLUGIN_TRANSLATEPRESS:
+				$settings  = get_option( 'trp_settings', [] );
+				$languages = $settings['publish-languages'] ?? [];
+				break;
+		}
+
+		return (array) apply_filters( 'plausible_analytics_active_languages', array_values( (array) $languages ) );
+	}
+
+	/**
+	 * Returns the currency a Revenue goal should be created in for a given language-domain.
+	 *
+	 * WooCommerce Multilingual & Multicurrency (WCML) lets a store pin a default currency per language
+	 * ("WooCommerce → Multilingual → Currencies"). When one is set, the matching per-language dashboard's
+	 * purchase goal is created in that storeview's own currency—mirroring how its view-product goals are
+	 * already localized. Without WCML (or when multi-currency is off, or no default is set for this
+	 * language) the store's base currency is used, and Plausible converts foreign-currency purchases into
+	 * it automatically.
+	 *
+	 * The base currency is read from WooCommerce's setting instead of get_woocommerce_currency(), because multicurrency
+	 * plugins filter the latter to the currency of the current request (e.g. WCML returns the visitor's currency in
+	 * AJAX requests), which would make the goal's currency depend on whichever request happens to provision it.
+	 *
+	 * @since 2.6.2
+	 *
+	 * @param string $domain_key 'default' or a WPML language code (e.g. 'es').
+	 *
+	 * @return string ISO 4217 currency code.
+	 */
+	public static function get_currency_for_language( $domain_key = 'default' ) {
+		$base = Integrations::is_edd_active() ? edd_get_currency() : (string) get_option( 'woocommerce_currency', 'USD' );
+
+		// A default currency per language is a WCML (WooCommerce + WPML) concept only.
+		if ( Integrations::is_edd_active() || static::get_multilang_plugin() !== static::MULTILANG_PLUGIN_WPML ) {
+			return $base;
+		}
+
+		$wcml = get_option( '_wcml_settings', [] );
+
+		if ( empty( $wcml['enable_multi_currency'] ) || empty( $wcml['default_currencies'] ) || ! is_array( $wcml['default_currencies'] ) ) {
+			return $base; // @codeCoverageIgnore
+		}
+
+		// In "by location" mode the currency follows the visitor's country, so the per-language defaults don't apply.
+		if ( ( $wcml['currency_mode'] ?? '' ) === 'by_location' ) {
+			return $base;
+		}
+
+		// The 'default' dashboard tracks WPML's default language.
+		$language = 'default' === $domain_key ? (string) apply_filters( 'wpml_default_language', null ) : $domain_key;
+		$currency = $wcml['default_currencies'][ $language ] ?? false;
+
+		// Languages without a pinned default currency ("Keep") are stored as false, 0 or '0'.
+		return is_string( $currency ) && preg_match( '/^[A-Z]{3}$/', $currency ) ? $currency : $base;
+	}
+
+	/**
 	 * Returns the API token.
 	 *
 	 * @return string
@@ -83,6 +172,7 @@ class Helpers {
 	 * Returns the key of the currently used Language Domain.
 	 *
 	 * @since              v2.6.0
+	 * @since              v2.6.2 Added TranslatePress (Multiple Domains) support.
 	 *
 	 * @return string
 	 *
@@ -93,20 +183,32 @@ class Helpers {
 			return 'default';
 		}
 
-		$language_domains = apply_filters( 'wpml_setting', [], 'language_domains' );
-		$current_language = apply_filters( 'wpml_current_language', null );
+		$language_domains = [];
+		$current_language = null;
 
-		if ( $current_language && isset( $language_domains[ $current_language ] ) ) {
-			return (string) apply_filters( 'plausible_analytics_current_language_domain_key', $current_language );
+		switch ( static::get_multilang_plugin() ) {
+			case static::MULTILANG_PLUGIN_WPML:
+				$language_domains = apply_filters( 'wpml_setting', [], 'language_domains' );
+				$current_language = apply_filters( 'wpml_current_language', null );
+				break;
+
+			case static::MULTILANG_PLUGIN_TRANSLATEPRESS:
+				$language_domains = static::get_translatepress_language_domains();
+				$current_language = static::get_translatepress_current_language();
+				break;
 		}
 
-		return (string) apply_filters( 'plausible_analytics_current_language_domain_key', 'default' );
+		$key = $current_language && isset( $language_domains[ $current_language ] ) ? $current_language : 'default';
+
+		return (string) apply_filters( 'plausible_analytics_current_language_domain_key', $key );
 	}
 
 	/**
-	 * Returns true only when WPML is active, its negotiation type is "different domain per language", AND at least one domain is configured.
+	 * Returns true only when a supported multilingual plugin (WPML or TranslatePress) is active, it's configured to serve
+	 * a "different domain per language", AND at least one domain is configured.
 	 *
 	 * @since              v2.6.0
+	 * @since              v2.6.2 Added TranslatePress (Multiple Domains) support.
 	 *
 	 * @return bool
 	 *
@@ -123,18 +225,86 @@ class Helpers {
 			return $is_language_per_domain; // @codeCoverageIgnore
 		}
 
-		/**
-		 * If WPML is not active, we can assume we're not in language per domain mode.
-		 */
-		if ( ! defined( 'ICL_SITEPRESS_VERSION' ) ) {
-			return $is_language_per_domain = (bool) apply_filters( 'plausible_analytics_language_per_domain_mode', false );
+		$value = false;
+
+		switch ( static::get_multilang_plugin() ) {
+			case static::MULTILANG_PLUGIN_WPML:
+				$negotiation_type = (int) apply_filters( 'wpml_setting', 0, 'language_negotiation_type' );
+				$domains          = apply_filters( 'wpml_setting', [], 'language_domains' );
+				$value            = $negotiation_type === 2 && ! empty( $domains );
+				break;
+
+			case static::MULTILANG_PLUGIN_TRANSLATEPRESS:
+				$value = ! empty( static::get_translatepress_language_domains() );
+				break;
 		}
 
-		$negotiation_type = (int) apply_filters( 'wpml_setting', 0, 'language_negotiation_type' );
-		$domains          = apply_filters( 'wpml_setting', [], 'language_domains' );
-		$value            = $negotiation_type === 2 && ! empty( $domains );
-
 		return $is_language_per_domain = (bool) apply_filters( 'plausible_analytics_language_per_domain_mode', $value );
+	}
+
+	/**
+	 * Returns the active multilingual plugin, so we know which of its APIs to talk to.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @return string One of the MULTILANG_PLUGIN_* constants, or an empty string when none is active.
+	 *
+	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
+	 */
+	public static function get_multilang_plugin() {
+		$plugin = '';
+
+		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
+			$plugin = static::MULTILANG_PLUGIN_WPML;
+		} elseif ( defined( 'TRP_PLUGIN_VERSION' ) ) {
+			$plugin = static::MULTILANG_PLUGIN_TRANSLATEPRESS;
+		}
+
+		return (string) apply_filters( 'plausible_analytics_multilang_plugin', $plugin );
+	}
+
+	/**
+	 * Returns TranslatePress' "Multiple Domains" mappings, keyed by language code (excluding the default language, to
+	 * mirror WPML's language_domains behavior).
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @return array
+	 */
+	protected static function get_translatepress_language_domains() {
+		$settings = function_exists( 'get_option' ) ? get_option( 'trp_settings', [] ) : [];
+		$mappings = $settings['trp-multiple-domains'] ?? [];
+		$default  = $settings['default-language'] ?? '';
+		$domains  = [];
+
+		if ( ! is_array( $mappings ) ) {
+			return $domains; // @codeCoverageIgnore
+		}
+
+		foreach ( $mappings as $language_code => $mapping ) {
+			if ( $language_code === $default || empty( $mapping['enabled'] ) || empty( $mapping['domain'] ) ) {
+				continue;
+			}
+
+			$domains[ $language_code ] = $mapping['domain'];
+		}
+
+		return $domains;
+	}
+
+	/**
+	 * Returns the language code TranslatePress is currently serving.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @return string|null
+	 *
+	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
+	 */
+	protected static function get_translatepress_current_language() {
+		global $TRP_LANGUAGE;
+
+		return ! empty( $TRP_LANGUAGE ) ? $TRP_LANGUAGE : null;
 	}
 
 	/**
@@ -367,24 +537,114 @@ class Helpers {
 		 * If the Avoid Ad Blockers option is enabled, return URL pointing to the local file.
 		 */
 		if ( $local && static::proxy_enabled() ) {
-			return esc_url( static::get_proxy_resource( 'cache_url' ) . $file_name . '.js' );
+			/**
+			 * The cache URL is stored as an absolute URL on the main domain, so it needs to be moved to the
+			 * language domain we're currently on.
+			 */
+			return esc_url( static::maybe_use_current_language_domain( static::get_proxy_resource( 'cache_url' ) . $file_name . '.js' ) );
 		}
 
 		return esc_url( static::get_hosted_domain_url() . "/js/$file_name.js" );
 	}
 
 	/**
+	 * Moves $url to the language domain that's currently being served, keeping its path and query intact.
+	 *
+	 * Both the proxy endpoint and the locally cached JS file are built from the main WP domain. In "domain per
+	 * language" mode that means the tracker would fire cross-origin requests (CORS) at the default domain, so we
+	 * point them at the domain the visitor is actually on.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @param string $url
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
+	 */
+	public static function maybe_use_current_language_domain( $url ) {
+		$origin = static::get_current_language_domain_url();
+
+		if ( empty( $url ) || empty( $origin ) ) {
+			return $url;
+		}
+
+		$parts = wp_parse_url( $url );
+
+		// Already on the right domain, or nothing we can rewrite.
+		if ( empty( $parts['host'] ) || strcasecmp( $parts['host'], (string) wp_parse_url( $origin, PHP_URL_HOST ) ) === 0 ) {
+			return $url;
+		}
+
+		$path  = $parts['path'] ?? '';
+		$query = ! empty( $parts['query'] ) ? '?' . $parts['query'] : '';
+
+		return $origin . $path . $query;
+	}
+
+	/**
+	 * Returns the origin (scheme + host + port) of the language domain that's currently being served, or an empty
+	 * string when we're not running in "domain per language" mode.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
+	 */
+	public static function get_current_language_domain_url() {
+		if ( ! static::is_language_per_domain_mode() ) {
+			return '';
+		}
+
+		$domains = static::get_language_domains();
+		$domain  = $domains[ static::get_current_language_domain_key() ] ?? '';
+
+		if ( empty( $domain ) ) {
+			return '';
+		}
+
+		// Language domains are stored as a bare host (WPML) or as a full URL (TranslatePress).
+		if ( strpos( $domain, '//' ) === false ) {
+			$domain = ( is_ssl() ? 'https://' : 'http://' ) . $domain;
+		}
+
+		$parts = wp_parse_url( $domain );
+
+		if ( empty( $parts['host'] ) ) {
+			return '';
+		}
+
+		$scheme = $parts['scheme'] ?? ( is_ssl() ? 'https' : 'http' );
+		$port   = ! empty( $parts['port'] ) ? ':' . $parts['port'] : '';
+
+		return $scheme . '://' . $parts['host'] . $port;
+	}
+
+	/**
 	 * @since              v2.6.0 Provide compatibility with multilang plugins, like WPML.
+	 * @since              v2.6.2 Added TranslatePress (Multiple Domains) support.
 	 *
 	 * @return array
 	 *
 	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
 	 */
 	public static function get_language_domains() {
-		$domains = apply_filters( 'wpml_setting', [], 'language_domains' );
-		$main    = wp_parse_url( home_url(), PHP_URL_HOST ) ?: home_url();
+		$domains = [];
 
-		// WPML's language_domains omits the default language; prepend the main WP domain.
+		switch ( static::get_multilang_plugin() ) {
+			case static::MULTILANG_PLUGIN_WPML:
+				$domains = apply_filters( 'wpml_setting', [], 'language_domains' );
+				break;
+
+			case static::MULTILANG_PLUGIN_TRANSLATEPRESS:
+				$domains = static::get_translatepress_language_domains();
+				break;
+		}
+
+		$main = wp_parse_url( home_url(), PHP_URL_HOST ) ?: home_url();
+
+		// WPML/TranslatePress omit the default language; prepend the main WP domain.
 		if ( ! in_array( $main, $domains, true ) ) {
 			$domains = array_merge( [ 'default' => $main ], $domains );
 		}
@@ -393,18 +653,121 @@ class Helpers {
 	}
 
 	/**
+	 * Returns the URL prefix the given language is served under e.g., 'es' for https://example.com/es/.
+	 *
+	 * Returns an empty string when the language isn't served under a prefix i.e., in "domain per language" mode, in
+	 * "language as parameter" mode, or for the default language.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @param string $language_code
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
+	 */
+	public static function get_language_url_prefix( $language_code ) {
+		if ( empty( $language_code ) || static::is_language_per_domain_mode() ) {
+			return '';
+		}
+
+		$prefix = '';
+
+		switch ( static::get_multilang_plugin() ) {
+			case static::MULTILANG_PLUGIN_WPML:
+				/**
+				 * wpml_permalink converts a URL to the requested language, whichever negotiation type is in use, so
+				 * whatever it adds in front of the home URL's path is the prefix we're after.
+				 */
+				$prefix = static::get_home_relative_path( apply_filters( 'wpml_permalink', home_url( '/' ), $language_code ) );
+				break;
+
+			case static::MULTILANG_PLUGIN_TRANSLATEPRESS:
+				$settings = get_option( 'trp_settings', [] );
+				$slugs    = $settings['url-slugs'] ?? [];
+
+				if ( $language_code !== static::get_default_language() ||
+				     ( $settings['add-subdirectory-to-default-language'] ?? 'no' ) === 'yes' ) {
+					$prefix = $slugs[ $language_code ] ?? $language_code;
+				}
+				break;
+		}
+
+		return (string) apply_filters( 'plausible_analytics_language_url_prefix', trim( (string) $prefix, '/' ), $language_code );
+	}
+
+	/**
+	 * Returns the home URL's path without leading/trailing slashes, e.g. 'site' for https://example.com/site/.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @return string Empty when the site is served from the domain's root.
+	 */
+	public static function get_home_path() {
+		return trim( (string) wp_parse_url( home_url( '/' ), PHP_URL_PATH ), '/' );
+	}
+
+	/**
+	 * Returns $url's path, relative to the home URL's path, without leading/trailing slashes.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @param string $url A URL or a path.
+	 *
+	 * @return string
+	 */
+	public static function get_home_relative_path( $url ) {
+		$path = trim( (string) wp_parse_url( $url, PHP_URL_PATH ), '/' );
+		$home = static::get_home_path();
+
+		if ( $home !== '' && ( $path === $home || strpos( $path, "$home/" ) === 0 ) ) {
+			$path = trim( substr( $path, strlen( $home ) ), '/' );
+		}
+
+		return $path;
+	}
+
+	/**
+	 * Returns the default language code of the active multilingual plugin.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
+	 */
+	public static function get_default_language() {
+		$language = '';
+
+		switch ( static::get_multilang_plugin() ) {
+			case static::MULTILANG_PLUGIN_WPML:
+				$language = apply_filters( 'wpml_default_language', null );
+				break;
+
+			case static::MULTILANG_PLUGIN_TRANSLATEPRESS:
+				$settings = get_option( 'trp_settings', [] );
+				$language = $settings['default-language'] ?? '';
+				break;
+		}
+
+		return (string) apply_filters( 'plausible_analytics_default_language', (string) $language );
+	}
+
+	/**
 	 * Get the name of the active multilang plugin.
+	 *
+	 * @since              v2.6.2 Added TranslatePress support.
 	 *
 	 * @return string
 	 *
 	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
 	 */
 	public static function get_multilang_plugin_name() {
-		$name = '';
-
-		if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-			$name = 'WPML';
-		}
+		$names = [
+			static::MULTILANG_PLUGIN_WPML           => 'WPML',
+			static::MULTILANG_PLUGIN_TRANSLATEPRESS => 'TranslatePress',
+		];
+		$name  = $names[ static::get_multilang_plugin() ] ?? '';
 
 		return apply_filters( 'plausible_analytics_multilang_plugin_name', $name );
 	}
@@ -480,6 +843,33 @@ class Helpers {
 	 */
 	public static function main_script_is_registered() {
 		return wp_script_is( 'plausible-analytics', 'registered' );
+	}
+
+	/**
+	 * Translates a URL slug, e.g., WooCommerce's product base, to the given language.
+	 *
+	 * WPML's String Translation registers these bases as 'URL slug: {post type}' in the 'WordPress' domain, which is
+	 * what WooCommerce Multilingual's Store URLs use too. TranslatePress doesn't translate post type bases.
+	 *
+	 * @since              v2.6.2
+	 *
+	 * @param string $slug      The untranslated slug, e.g. 'product'.
+	 * @param string $language_code
+	 * @param string $post_type The post-type the slug belongs to, e.g. 'product'.
+	 *
+	 * @return string
+	 *
+	 * @codeCoverageIgnore Because it depends on 3rd party plugins.
+	 */
+	public static function translate_url_slug( $slug, $language_code, $post_type = '' ) {
+		$translated = $slug;
+
+		if ( ! empty( $slug ) && ! empty( $language_code ) && ! empty( $post_type ) &&
+		     static::get_multilang_plugin() === static::MULTILANG_PLUGIN_WPML ) {
+			$translated = apply_filters( 'wpml_translate_single_string', $slug, 'WordPress', "URL slug: $post_type", $language_code );
+		}
+
+		return (string) apply_filters( 'plausible_analytics_translated_url_slug', $translated, $slug, $language_code, $post_type );
 	}
 
 	/**
